@@ -21,7 +21,7 @@ class _LoginViewState extends State<LoginView> {
     super.initState();
   }
 
-  Future<void> iniciarSesion(String email, String password) async {
+  Future<void> iniciarSesion(String email, String password, context) async {
     debugPrint(email);
     debugPrint(password);
     final response = await http.post(
@@ -76,7 +76,7 @@ class _LoginViewState extends State<LoginView> {
               FilledButton(
                 onPressed: () async {
                   await iniciarSesion(
-                      usuarioController.text, passWordController.text);
+                      usuarioController.text, passWordController.text, context);
                 },
                 child: const Text('Ingresar'),
               )
