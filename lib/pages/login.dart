@@ -19,7 +19,9 @@ class _LoginPageState extends State<LoginPage> {
     
     super.initState();
   }
-  Future <void> iniciarSesion(String email, String password) async {
+
+  
+  Future <void> iniciarSesion(String email, String password,context) async {
     debugPrint(email);
     debugPrint(password);
     final response = await http.post(
@@ -32,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         'password': password,
       }),
     );
- Navigator.of(context).pushNamed('HomeView');
+   Navigator.of(context).pushNamed('HomeView');
       //--- RESPUESTA
       debugPrint(response.body);
 
@@ -76,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               FilledButton(
                 onPressed: () async {
-                    await iniciarSesion(usuarioController.text, passWordController.text);
+                    await iniciarSesion(usuarioController.text, passWordController.text,context);
                 },
                 child: const Text('Ingresar'),
               )
