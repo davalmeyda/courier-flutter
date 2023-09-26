@@ -1,29 +1,31 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:scanner_qr/features/features.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
+  static const String route = 'LoginView';
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final usuarioController = TextEditingController();
-  final passWordController = TextEditingController();
-
+class _LoginViewState extends State<LoginView> {
+  final usuarioController = TextEditingController(text: 'correo@correo.com');
+  final passWordController = TextEditingController(text: 'test@123');
 
   @override
   void initState() {
-    
     super.initState();
   }
-  Future <void> iniciarSesion(String email, String password) async {
+
+  Future<void> iniciarSesion(String email, String password) async {
     debugPrint(email);
     debugPrint(password);
     final response = await http.post(
-      Uri.parse('http://192.168.1.107:3000/users/login'),
+      Uri.parse('http://192.168.1.73:3000/users/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -32,25 +34,22 @@ class _LoginPageState extends State<LoginPage> {
         'password': password,
       }),
     );
- Navigator.of(context).pushNamed('HomeView');
-      //--- RESPUESTA
-      debugPrint(response.body);
-
+    Navigator.pushReplacementNamed(context, ReceiveListView.route);
+    //--- RESPUESTA
+    debugPrint(response.body);
   }
 
-
-  void getData(){
+  void getData() {
     debugPrint(usuarioController.text);
     debugPrint(passWordController.text);
-    Navigator.of(context).pushNamed('HomeView');
+    Navigator.pushNamed(context, ReceiveListView.route);
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Container(
-        padding:const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: usuarioController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  label:  Text('Usuario'),
+                  label: Text('Usuario'),
                 ),
               ),
               const SizedBox(height: 20),
@@ -69,14 +68,15 @@ class _LoginPageState extends State<LoginPage> {
                 controller: passWordController,
                 obscureText: true,
                 decoration: const InputDecoration(
-                  border:  OutlineInputBorder(),
-                  label:  Text('Password'),
+                  border: OutlineInputBorder(),
+                  label: Text('Password'),
                 ),
               ),
               const SizedBox(height: 20),
               FilledButton(
                 onPressed: () async {
-                    await iniciarSesion(usuarioController.text, passWordController.text);
+                  await iniciarSesion(
+                      usuarioController.text, passWordController.text);
                 },
                 child: const Text('Ingresar'),
               )
@@ -87,4 +87,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-                                        

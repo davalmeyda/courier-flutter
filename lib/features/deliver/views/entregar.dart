@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class Entregar extends StatefulWidget {
+  const Entregar({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Entregar> createState() => _EntregarState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _EntregarState extends State<Entregar> {
   String barcodeScanRes = '';
 
   Future<void> scanBarcodeNormal() async {
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 20),
               Text(barcodeScanRes),
-              const SizedBox(height: 20), 
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: scanBarcodeNormal,
                 child: const Text('Escanear codigo'),
