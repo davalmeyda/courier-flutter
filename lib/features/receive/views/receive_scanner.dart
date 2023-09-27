@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:scanner_qr/features/receive/services/pedido_entity.dart';
+import 'package:qr_mobile_vision/qr_camera.dart';
+import 'package:scanner_qr/features/features.dart';
 
 class ReceiveScannerView extends StatefulWidget {
   const ReceiveScannerView({super.key});
@@ -9,10 +14,39 @@ class ReceiveScannerView extends StatefulWidget {
 }
 
 class _ReceiveScannerViewState extends State<ReceiveScannerView> {
-  List<Pedidos>? receiveListToConfirm = [];
+  List<String>? receiveListToConfirm = [];
+  bool loading = false;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<void> changeStatusManyReceives(context) async {
+    setState(() {
+      loading = true;
+    });
+    final response = await http.post(
+      Uri.parse('http://192.168.1.73:3000/pedido/recibir'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body:
+          jsonEncode(<String, List<String>>{'codigos': receiveListToConfirm!}),
+    );
+    final map = json.decode(response.body) as Map<String, dynamic>;
+    debugPrint(map.toString());
+
+    if (map['statusCode'] == 200) {
+      setState(() {
+        receiveListToConfirm!.clear();
+      });
+      Navigator.pushReplacementNamed(context, ReceiveListView.route);
+    }
+
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -25,8 +59,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
         floatingActionButton: receiveListToConfirm!.isNotEmpty
             ? FloatingActionButton.extended(
                 onPressed: () {
-                  // TODO: Confirmar recepcion
-                  // Navigator.pushNamed(context, ReceiveListView.route);
+                  changeStatusManyReceives(context);
                 },
                 label: const Text('Confirmar'),
                 icon: const Icon(Icons.check),
@@ -35,10 +68,31 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
         body: Column(
           children: [
             Container(
-              height: 350,
+              height: 250,
               width: double.infinity,
               color: Colors.black,
-              child: const Text('Scanner'),
+              child: QrCamera(
+                cameraDirection: CameraDirection.FRONT,
+                qrCodeCallback: (code) async {
+                  if (code!.isNotEmpty) {
+                    if (receiveListToConfirm!.isNotEmpty &&
+                        receiveListToConfirm!
+                            .any((element) => code == element)) {
+                      return;
+                    }
+                    setState(() {
+                      receiveListToConfirm!.add(code);
+                    });
+                  }
+                  final player = AudioPlayer();
+                  await player.setSource(AssetSource('audio/scanner.mp3'));
+                  await player.resume();
+                  await player.stop();
+                  Timer(const Duration(seconds: 3), () {
+                    debugPrint('timer');
+                  });
+                },
+              ),
             ),
             receiveListToConfirm!.isNotEmpty
                 ? Expanded(
@@ -48,7 +102,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                       shrinkWrap: true,
                       itemCount: receiveListToConfirm!.length,
                       itemBuilder: (context, index) {
-                        final Pedidos receive = receiveListToConfirm![index];
+                        final String receive = receiveListToConfirm![index];
                         return Container(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 15),
@@ -78,7 +132,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                                     children: [
                                       const SizedBox(width: 10),
                                       Expanded(
-                                        child: Text(receive.codigo),
+                                        child: Text(receive),
                                       ),
                                     ],
                                   ),

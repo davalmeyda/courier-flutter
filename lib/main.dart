@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scanner_qr/shared/bloc/bottom_navidation_bloc/bottom_navigation_bloc.dart';
 
 import 'package:scanner_qr/shared/shared.dart';
 
 void main() {
-  // runApp(MultiRepositoryProvider(
-  //   providers: [
-  //     // RepositoryProvider(create: (context) => _httpTaskRepository)
-  //   ],
-  //   child: BlocProvider(
-  //     create: (context) => HomeBloc(
-  //       context.read<TaskRepository>(),
-  //     ),
-  //     child: const MyApp(),
-  //   ),
-  // ));
-  runApp(const MyApp());
+  runApp(MultiRepositoryProvider(
+    providers: [
+      RepositoryProvider<BottomNavigationBloc>(
+        create: (context) => BottomNavigationBloc(),
+      ),
+    ],
+    child: BlocProvider(
+      create: (context) => BottomNavigationBloc(),
+      child: const MyApp(),
+    ),
+  ));
 }
 
 class MyApp extends StatelessWidget {
