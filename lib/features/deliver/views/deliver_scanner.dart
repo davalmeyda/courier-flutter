@@ -25,7 +25,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
   Agencia? deliverAgency;
   String messageStatus = 'Escanee el código de barras';
   int? amount = 0;
-  File? deliverPhoto;
+  List<File>? deliverPhotos;
   bool? loading;
 
   @override
@@ -84,9 +84,8 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
       loading = true;
     });
     debugPrint(deliver?.codigo);
-    debugPrint(deliverPhoto?.path);
     debugPrint(amount.toString());
-    if (deliverPhoto == null) {
+    if (deliverPhotos == null) {
       setState(() {
         loading = false;
       });
@@ -97,17 +96,17 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
       Uri.parse(
           'http://192.168.1.73:3000/pedido/imagenDespacho/${deliver?.codigo}?user_id=${authBloc2.user['id']}&importe=$amount'),
     );
-    request.files.add(
-      http.MultipartFile(
-        'imagen',
-        deliverPhoto!.readAsBytes().asStream(),
-        deliverPhoto!.lengthSync(),
-        filename: deliverPhoto!.path.split('/').last,
-      ),
-    );
-    // request.headers.addAll(<String, String>{
-    //   'Content-Type': 'multipart/form-data',
-    // });
+    for (var element in deliverPhotos!) {
+      // TODO: Cambiar la lógica de imágenes
+      request.files.add(
+        http.MultipartFile(
+          'imagen',
+          element.readAsBytes().asStream(),
+          element.lengthSync(),
+          filename: element.path.split('/').last,
+        ),
+      );
+    }
     final response = await request.send();
     if (response.statusCode == 200) {
       final response = await http.put(
@@ -478,20 +477,20 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                 ElevatedButton(
                                   onPressed: () async {
                                     final picker = ImagePicker();
-                                    final pickedFile = await picker.pickImage(
-                                      source: ImageSource.camera,
-                                    );
-                                    if (pickedFile != null) {
+                                    final pickedFiles =
+                                        await picker.pickMultiImage();
+                                    if (pickedFiles.isNotEmpty) {
                                       setState(() {
-                                        deliverPhoto = File.fromUri(
-                                          Uri(path: pickedFile.path),
-                                        );
+                                        deliverPhotos = pickedFiles
+                                            .map((e) => File.fromUri(
+                                                  Uri(path: e.path),
+                                                ))
+                                            .toList();
                                       });
-                                      debugPrint(pickedFile.path);
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: deliverPhoto != null
+                                    backgroundColor: deliverPhotos != null
                                         ? Colors.grey
                                         : Colors.blue,
                                   ),
