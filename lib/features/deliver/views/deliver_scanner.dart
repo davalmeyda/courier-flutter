@@ -76,9 +76,12 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
         messageStatus = 'Escanee el código de barras';
       });
     } else {
-      setState(() {
-        messageStatus = map['message'];
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(map['message']),
+          duration: const Duration(milliseconds: 1000),
+        ),
+      );
     }
   }
 
