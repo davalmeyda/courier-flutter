@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
+import 'package:scanner_qr/shared/config/config.dart';
 
 class ReceiveScannerView extends StatefulWidget {
   const ReceiveScannerView({super.key});
@@ -28,7 +29,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
       loading = true;
     });
     final response = await http.post(
-      Uri.parse('http://192.168.1.73:3000/pedido/recibir'),
+      Uri.parse('${EnvironmentVariables.baseUrl}pedido/recibir'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -75,7 +76,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
               width: double.infinity,
               color: Colors.black,
               child: QrCamera(
-                cameraDirection: CameraDirection.FRONT,
+                cameraDirection: CameraDirection.BACK,
                 qrCodeCallback: (code) async {
                   if (code!.isNotEmpty) {
                     if (receiveListToConfirm!.isNotEmpty &&

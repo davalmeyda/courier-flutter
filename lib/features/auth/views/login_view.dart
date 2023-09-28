@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:scanner_qr/features/auth/bloc/auth_bloc.dart';
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
+import 'package:scanner_qr/shared/config/config.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -29,7 +28,7 @@ class _LoginViewState extends State<LoginView> {
     debugPrint(email);
     debugPrint(password);
     final response = await http.post(
-      Uri.parse('http://192.168.1.73:3000/users/login'),
+      Uri.parse('${EnvironmentVariables.baseUrl}users/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'dart:convert';
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/models/models.dart';
+import 'package:scanner_qr/shared/config/config.dart';
 
 class ReceiveListView extends StatefulWidget {
   const ReceiveListView({super.key});
@@ -29,7 +29,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
     });
     final response = await http.get(
         Uri.parse(
-            'http://192.168.1.73:3000/pedido/pendientes${searchText != '' ? '?idUser=$userId&search=$searchText' : '?idUser=$userId'}'),
+            '${EnvironmentVariables.baseUrl}pedido/pendientes${searchText != '' ? '?idUser=$userId&search=$searchText' : '?idUser=$userId'}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -86,6 +86,11 @@ class _ReceiveListViewState extends State<ReceiveListView> {
               ),
             ],
           ),
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text('Total de recibos pendientes: ${receiveList!.length}'),
         ),
         loading
             ? Center(

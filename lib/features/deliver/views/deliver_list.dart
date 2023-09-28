@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'dart:convert';
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/models/models.dart';
+import 'package:scanner_qr/shared/config/config.dart';
 
 class DeliverListView extends StatefulWidget {
   const DeliverListView({super.key});
@@ -29,7 +29,7 @@ class _DeliverListViewState extends State<DeliverListView> {
     });
     final response = await http.get(
         Uri.parse(
-            'http://192.168.1.73:3000/pedido/recibidos${searchText != '' ? '?idUser=$userId&search=$searchText' : '?idUser=$userId'}'),
+            '${EnvironmentVariables.baseUrl}pedido/recibidos${searchText != '' ? '?idUser=$userId&search=$searchText' : '?idUser=$userId'}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -44,8 +44,6 @@ class _DeliverListViewState extends State<DeliverListView> {
 
   @override
   Widget build(BuildContext context) {
-    // final receiveBloc = context.read<ReceiveBloc>().state;
-    // final receiveList = receiveBloc.receiveList;
     return Column(
       children: [
         Container(
@@ -86,6 +84,11 @@ class _DeliverListViewState extends State<DeliverListView> {
               ),
             ],
           ),
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text('Total de despachos pendientes: ${receiveList!.length}'),
         ),
         loading
             ? Center(
@@ -170,6 +173,33 @@ class _DeliverListViewState extends State<DeliverListView> {
                                     ),
                                   ],
                                 ),
+                                const SizedBox(height: 10),
+                                receive.direccionDt.direccion
+                                                .reprogramaciones !=
+                                            null &&
+                                        receive.direccionDt.direccion
+                                            .reprogramaciones!.isNotEmpty
+                                    ? Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Icons.warning,
+                                            color: Colors.red,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(
+                                              'Reprogramaciones: ${receive.direccionDt.direccion.reprogramaciones!.length.toString()}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : const SizedBox(),
                               ],
                             ),
                           ),

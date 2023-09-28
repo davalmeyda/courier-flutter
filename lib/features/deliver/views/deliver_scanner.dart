@@ -10,6 +10,7 @@ import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/models/models.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:scanner_qr/shared/config/config.dart';
 
 class DeliverScannerView extends StatefulWidget {
   const DeliverScannerView({super.key});
@@ -38,7 +39,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
       messageStatus = 'Buscando...';
     });
     final response = await http.get(
-      Uri.parse('http://192.168.1.73:3000/pedido/$deliverCode'),
+      Uri.parse('${EnvironmentVariables.baseUrl}pedido/$deliverCode'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -85,7 +86,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
     });
     debugPrint(deliver?.codigo);
     debugPrint(amount.toString());
-    if (deliverPhotos == null) {
+    if (deliverPhotos == null || deliverPhotos!.isEmpty) {
       setState(() {
         loading = false;
       });
@@ -95,9 +96,8 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
       final request = http.MultipartRequest(
         'PUT',
         Uri.parse(
-            'http://192.168.1.73:3000/pedido/imagenDespacho/${deliver?.codigo}?user_id=${authBloc2.user['id']}&importe=$amount'),
+            '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${deliver?.codigo}?user_id=${authBloc2.user['id']}&importe=$amount'),
       );
-      // TODO: Cambiar la lógica de imágenes
       request.files.add(
         http.MultipartFile(
           'imagen',
@@ -110,7 +110,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
     }
     final response = await http.put(
       Uri.parse(
-          'http://192.168.1.73:3000/pedido/entregar/${deliver?.codigo}?idUser=${authBloc2.user['id']}&importe=$amount'),
+          '${EnvironmentVariables.baseUrl}pedido/entregar/${deliver?.codigo}?idUser=${authBloc2.user['id']}&importe=$amount'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -473,121 +473,132 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                 deliverAgency?.id == 3
                                     ? const SizedBox(height: 20)
                                     : const SizedBox(),
-                                if (deliverPhotos!.isEmpty)
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      final picker = ImagePicker();
-                                      final pickedFiles =
-                                          await picker.pickMultiImage();
-                                      if (pickedFiles.isNotEmpty) {
-                                        setState(() {
-                                          deliverPhotos = pickedFiles
-                                              .map((e) => File.fromUri(
-                                                    Uri(path: e.path),
-                                                  ))
-                                              .toList();
-                                        });
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: deliverPhotos != null
-                                          ? Colors.grey
-                                          : Colors.blue,
-                                    ),
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.photo, color: Colors.white),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Foto de entrega',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                else
-                                  ListView.builder(
-                                    itemCount: deliverPhotos!.length,
-                                    shrinkWrap: true,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      // return ListTile(
-                                      //   leading: Image.asset(
-                                      //     image.path.toString(),
-                                      //   ),
-                                      //   title: Text('Imagen $index'),
-                                      //   trailing: IconButton(
-                                      //     icon: const Icon(Icons.delete),
-                                      //     onPressed: () {
-                                      //       setState(() {
-                                      //         deliverPhotos!.removeAt(index);
-                                      //       });
-                                      //     },
-                                      //   ),
-                                      // );
-                                      return Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          children: [
-                                            Image.file(
-                                              deliverPhotos![index],
-                                              width: 80,
-                                              height: 80,
-                                              fit: BoxFit.cover,
-                                            ),
-                                            const SizedBox(width: 16),
-                                            Expanded(
-                                              child: Text(
-                                                'Imagen $index',
-                                                style: const TextStyle(
-                                                    fontSize: 16),
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(Icons.delete),
-                                              onPressed: () {
-                                                setState(() {
-                                                  deliverPhotos!
-                                                      .removeAt(index);
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    final picker = ImagePicker();
+                                    final pickedFiles =
+                                        await picker.pickMultiImage();
+                                    if (pickedFiles.isNotEmpty) {
+                                      setState(() {
+                                        deliverPhotos = pickedFiles
+                                            .map((e) => File.fromUri(
+                                                  Uri(path: e.path),
+                                                ))
+                                            .toList();
+                                      });
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
                                   ),
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.photo, color: Colors.white),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'Agregar fotos',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                ListView.builder(
+                                  itemCount: deliverPhotos!.length,
+                                  shrinkWrap: true,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Image.file(
+                                              deliverPhotos![index],
+                                              // width: 80,
+                                              height: 80,
+                                              fit: BoxFit.fitWidth,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                deliverPhotos!.removeAt(index);
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
                                 const SizedBox(height: 50),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                        ),
-                                        onPressed: () {
-                                          debugPrint(deliver?.codigo);
-                                        },
-                                        child: const Text(
-                                          'Rechazar',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
+                                SizedBox(
+                                  height: 50,
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
                                     ),
-                                    const SizedBox(
-                                      width: 20,
+                                    onPressed: () {
+                                      debugPrint(deliver?.codigo);
+                                    },
+                                    child: const Text(
+                                      'Rechazar',
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () => confirmDelivery(),
-                                        child: const Text('Confirmar'),
-                                      ),
-                                    )
-                                  ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height: 50,
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DeliverRescheduleView(
+                                              deliver: deliver!,
+                                            ),
+                                          ));
+                                    },
+                                    child: const Text(
+                                      'Reprogramar',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height: 50,
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                    ),
+                                    onPressed: deliverPhotos!.isEmpty
+                                        ? null
+                                        : () => confirmDelivery(),
+                                    child: const Text(
+                                      'Confirmar',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
                                 )
                               ],
                             ),
@@ -604,7 +615,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                       width: double.infinity,
                       color: Colors.black,
                       child: QrCamera(
-                        cameraDirection: CameraDirection.FRONT,
+                        cameraDirection: CameraDirection.BACK,
                         qrCodeCallback: (code) async {
                           if (code!.isNotEmpty) {
                             getDeliverDetails(code);

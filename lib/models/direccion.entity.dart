@@ -1,3 +1,5 @@
+import 'package:scanner_qr/models/reprogramaciones.entity.dart';
+
 class Direccion {
   int id;
   String? correlativo;
@@ -17,6 +19,7 @@ class Direccion {
   String? googleMaps;
   int? estado;
   int? recibido;
+  List<Reprogramacion>? reprogramaciones;
 
   Direccion({
     required this.id,
@@ -37,6 +40,7 @@ class Direccion {
     this.observaciones,
     this.googleMaps,
     this.estado,
+    this.reprogramaciones,
   });
 
   factory Direccion.fromJson(Map<String, dynamic> json) => Direccion(
@@ -58,6 +62,7 @@ class Direccion {
         observaciones: json['observaciones'],
         googleMaps: json['google_maps'],
         estado: json['estado'],
+        reprogramaciones: Reprogramacion.fromJsonList(json['reprogramaciones']),
       );
 
   static List<Direccion> fromJsonList(List<dynamic> jsonList) =>
