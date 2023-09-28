@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
+import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
 
 class ReceiveScannerView extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
     super.initState();
   }
 
-  Future<void> changeStatusManyReceives(context) async {
+  Future<void> changeStatusManyReceives(BuildContext context) async {
     setState(() {
       loading = true;
     });
@@ -31,8 +32,10 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body:
-          jsonEncode(<String, List<String>>{'codigos': receiveListToConfirm!}),
+      body: jsonEncode(<String, dynamic>{
+        'codigos': receiveListToConfirm!,
+        'idUser': authBloc2.user['id'],
+      }),
     );
     final map = json.decode(response.body) as Map<String, dynamic>;
     debugPrint(map.toString());
@@ -41,7 +44,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
       setState(() {
         receiveListToConfirm!.clear();
       });
-      Navigator.pushReplacementNamed(context, ReceiveListView.route);
+      Navigator.popAndPushNamed(context, HomeView.route);
     }
 
     setState(() {
@@ -53,7 +56,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Recibir pedidos'),
+          title: const Text('Recibir'),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: receiveListToConfirm!.isNotEmpty

@@ -38,7 +38,7 @@ class _EntregarState extends State<Entregar> {
         });
     debugPrint(response.body);
 
-    final datosObtenidos = response.body;
+    // final datosObtenidos = response.body;
 
     // Navega a la pantalla de mostrar datos y pasa los datos como argumento
     // ignore: use_build_context_synchronously

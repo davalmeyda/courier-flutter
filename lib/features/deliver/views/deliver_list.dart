@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'dart:convert';
 import 'package:scanner_qr/features/features.dart';
-import 'package:scanner_qr/features/receive/services/pedido_entity.dart';
-import 'package:scanner_qr/shared/shared.dart';
+import 'package:scanner_qr/models/models.dart';
 
 class DeliverListView extends StatefulWidget {
   const DeliverListView({super.key});
@@ -14,27 +15,27 @@ class DeliverListView extends StatefulWidget {
 
 class _DeliverListViewState extends State<DeliverListView> {
   bool loading = false;
-  List<Pedidos>? receiveList = [];
+  List<Pedido>? receiveList = [];
 
   @override
   void initState() {
     super.initState();
-    getAllPendingReceives('');
+    getAllPendingReceives('', authBloc2.user['id'].toString());
   }
 
-  Future<void> getAllPendingReceives(String searchText) async {
+  Future<void> getAllPendingReceives(String searchText, String userId) async {
     setState(() {
       loading = true;
     });
     final response = await http.get(
         Uri.parse(
-            'http://192.168.1.73:3000/pedido/recibidos${searchText != '' ? '?search=$searchText' : ''}'),
+            'http://192.168.1.73:3000/pedido/recibidos${searchText != '' ? '?idUser=$userId&search=$searchText' : '?idUser=$userId'}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
     final map = json.decode(response.body) as Map<String, dynamic>;
     debugPrint(map.toString());
-    final pedidos = Pedidos.fromJsonList(map['body'][0]);
+    final pedidos = Pedido.fromJsonList(map['body'][0]);
     setState(() {
       receiveList = pedidos;
       loading = false;
@@ -60,7 +61,8 @@ class _DeliverListViewState extends State<DeliverListView> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                       fillColor: Colors.white),
-                  onChanged: (value) => getAllPendingReceives(value),
+                  onChanged: (value) => getAllPendingReceives(
+                      value, authBloc2.user['id'].toString()),
                 ),
               ),
               const SizedBox(width: 10),
@@ -79,7 +81,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, ReceiveScannerView.route);
+                  Navigator.pushNamed(context, DeliverScannerView.route);
                 },
               ),
             ],
@@ -104,7 +106,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                       shrinkWrap: true,
                       itemCount: receiveList!.length,
                       itemBuilder: (context, index) {
-                        final Pedidos receive = receiveList![index];
+                        final Pedido receive = receiveList![index];
                         return GestureDetector(
                           onTap: () {
                             // Navigator.push<void>(
@@ -140,10 +142,10 @@ class _DeliverListViewState extends State<DeliverListView> {
                                     const Icon(Icons.label),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(receive.codigo),
+                                      child: Text(receive.codigo ?? ''),
                                     ),
                                     const SizedBox(width: 10),
-                                    Text(receive.correlativo),
+                                    Text(receive.correlativo ?? ''),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
@@ -153,7 +155,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                                     const Icon(Icons.account_circle_outlined),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(receive.cRazonsocial),
+                                      child: Text(receive.cRazonsocial ?? ''),
                                     ),
                                   ],
                                 ),

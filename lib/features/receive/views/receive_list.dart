@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'dart:convert';
 import 'package:scanner_qr/features/features.dart';
-import 'package:scanner_qr/features/receive/services/pedido_entity.dart';
-import 'package:scanner_qr/shared/shared.dart';
+import 'package:scanner_qr/models/models.dart';
 
 class ReceiveListView extends StatefulWidget {
   const ReceiveListView({super.key});
@@ -14,27 +15,27 @@ class ReceiveListView extends StatefulWidget {
 
 class _ReceiveListViewState extends State<ReceiveListView> {
   bool loading = false;
-  List<Pedidos>? receiveList = [];
+  List<Pedido>? receiveList = [];
 
   @override
   void initState() {
     super.initState();
-    getAllPendingReceives('');
+    getAllPendingReceives('', authBloc2.user['id'].toString());
   }
 
-  Future<void> getAllPendingReceives(String searchText) async {
+  Future<void> getAllPendingReceives(String searchText, String userId) async {
     setState(() {
       loading = true;
     });
     final response = await http.get(
         Uri.parse(
-            'http://192.168.1.73:3000/pedido/pendientes${searchText != '' ? '?search=$searchText' : ''}'),
+            'http://192.168.1.73:3000/pedido/pendientes${searchText != '' ? '?idUser=$userId&search=$searchText' : '?idUser=$userId'}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
     final map = json.decode(response.body) as Map<String, dynamic>;
     debugPrint(map.toString());
-    final pedidos = Pedidos.fromJsonList(map['body'][0]);
+    final pedidos = Pedido.fromJsonList(map['body'][0]);
     setState(() {
       receiveList = pedidos;
       loading = false;
@@ -60,7 +61,8 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                       fillColor: Colors.white),
-                  onChanged: (value) => getAllPendingReceives(value),
+                  onChanged: (value) => getAllPendingReceives(
+                      value, authBloc2.user['id'].toString()),
                 ),
               ),
               const SizedBox(width: 10),
@@ -104,7 +106,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                       shrinkWrap: true,
                       itemCount: receiveList!.length,
                       itemBuilder: (context, index) {
-                        final Pedidos receive = receiveList![index];
+                        final Pedido receive = receiveList![index];
                         return GestureDetector(
                           onTap: () {
                             // Navigator.push<void>(
@@ -140,10 +142,10 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                     const Icon(Icons.label),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(receive.codigo),
+                                      child: Text(receive.codigo ?? ''),
                                     ),
                                     const SizedBox(width: 10),
-                                    Text(receive.correlativo),
+                                    Text(receive.correlativo ?? ''),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
@@ -153,7 +155,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                     const Icon(Icons.account_circle_outlined),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(receive.cRazonsocial),
+                                      child: Text(receive.cRazonsocial ?? ''),
                                     ),
                                   ],
                                 ),
@@ -177,14 +179,33 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                   )
                 : Center(
                     child: Container(
-                      padding: const EdgeInsets.all(20),
-                      child: const Text(
-                        'No hay datos que mostrar',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ),
+                        padding: const EdgeInsets.all(20),
+                        // child: StreamBuilder<dynamic>(
+                        //     stream: authBloc2.userStram,
+                        //     builder: (context, snapshot) {
+                        //       if (snapshot.hasData) {
+                        //         return Text(
+                        //           'No hay datos que mostrar' +
+                        //               snapshot.data['id']!.toString(),
+                        //           textAlign: TextAlign.center,
+                        //           style: TextStyle(
+                        //               fontWeight: FontWeight.bold, fontSize: 16),
+                        //         );
+                        //       } else {
+                        //         return const Text(
+                        //           'No hay datos que mostrar',
+                        //           textAlign: TextAlign.center,
+                        //           style: TextStyle(
+                        //               fontWeight: FontWeight.bold, fontSize: 16),
+                        //         );
+                        //       }
+                        //     }),
+                        child: const Text(
+                          'No hay datos que mostrar',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        )),
                   ),
       ],
     );

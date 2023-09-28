@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:scanner_qr/features/auth/bloc/auth_bloc.dart';
+import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
 
 class LoginView extends StatefulWidget {
@@ -21,7 +24,8 @@ class _LoginViewState extends State<LoginView> {
     super.initState();
   }
 
-  Future<void> iniciarSesion(String email, String password, context) async {
+  Future<void> iniciarSesion(
+      String email, String password, BuildContext context) async {
     debugPrint(email);
     debugPrint(password);
     final response = await http.post(
@@ -34,9 +38,14 @@ class _LoginViewState extends State<LoginView> {
         'password': password,
       }),
     );
-    Navigator.pushReplacementNamed(context, ReceiveListView.route);
     //--- RESPUESTA
-    debugPrint(response.body);
+    final map = json.decode(response.body) as Map<String, dynamic>;
+    if (map['statusCode'] == 202) {
+      debugPrint(map['body']['id'].toString());
+      // context.read<AuthBloc>().add(ChangeIdUser(map['body']['id']));
+      authBloc2.setUser(map['body']);
+      Navigator.pushReplacementNamed(context, HomeView.route);
+    }
   }
 
   void getData() {

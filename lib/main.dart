@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scanner_qr/shared/bloc/bottom_navidation_bloc/bottom_navigation_bloc.dart';
-
+import 'package:scanner_qr/features/auth/bloc/auth_bloc.dart';
 import 'package:scanner_qr/shared/shared.dart';
 
 void main() {
   runApp(MultiRepositoryProvider(
     providers: [
-      RepositoryProvider<BottomNavigationBloc>(
-        create: (context) => BottomNavigationBloc(),
+      RepositoryProvider<AuthBloc>(
+        create: (context) => AuthBloc(),
       ),
     ],
     child: BlocProvider(
-      create: (context) => BottomNavigationBloc(),
+      create: (context) => AuthBloc(),
       child: const MyApp(),
     ),
   ));
@@ -21,7 +20,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final navigatorKey = AppRoutes.mainNavigatorKey;

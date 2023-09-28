@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scanner_qr/features/auth/bloc/auth_bloc.dart';
 import 'package:scanner_qr/features/features.dart';
-import 'package:scanner_qr/shared/bloc/bottom_navidation_bloc/bottom_navigation_bloc.dart';
-import 'package:scanner_qr/shared/shared.dart';
 
 class HomeView extends StatelessWidget {
   static const String route = 'HomeView';
@@ -12,7 +11,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocBuilder<BottomNavigationBloc, BottomNavigationState>(
+        child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state.selectedIndex == 1) {
               return const DeliverListView();
