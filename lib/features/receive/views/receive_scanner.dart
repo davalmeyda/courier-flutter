@@ -9,6 +9,7 @@ import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/shared/config/config.dart';
 import 'package:scanner_qr/shared/utils/alert.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 
 class ReceiveScannerView extends StatefulWidget {
   const ReceiveScannerView({super.key});
@@ -66,6 +67,29 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
     });
   }
 
+  dynamic currentBackPressTime;
+
+  // FUNCION QUE AGREGA A LA LISTA
+  void agregarLista(String? code) async {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > const Duration(seconds: 3)) {
+      FlutterBeep.beep();
+
+      currentBackPressTime = now;
+
+      if (code!.isNotEmpty) {
+        if (receiveListToConfirm!.isNotEmpty &&
+            receiveListToConfirm!.any((element) => code == element)) {
+          return;
+        }
+        setState(() {
+          receiveListToConfirm!.add(code);
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,25 +118,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                   style: const TextStyle(color: Colors.red),
                 ),
                 cameraDirection: CameraDirection.BACK,
-                qrCodeCallback: (code) async {
-                  if (code!.isNotEmpty) {
-                    if (receiveListToConfirm!.isNotEmpty &&
-                        receiveListToConfirm!
-                            .any((element) => code == element)) {
-                      return;
-                    }
-                    setState(() {
-                      receiveListToConfirm!.add(code);
-                    });
-                  }
-                  // final player = AudioPlayer();
-                  // await player.setSource(AssetSource('audio/scanner.mp3'));
-                  // await player.resume();
-                  // await player.stop();
-                  // Timer(const Duration(seconds: 3), () {
-                  //   debugPrint('timer');
-                  // });
-                },
+                qrCodeCallback: agregarLista,
               ),
             ),
             receiveListToConfirm!.isNotEmpty
