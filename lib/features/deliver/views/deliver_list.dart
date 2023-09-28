@@ -103,127 +103,137 @@ class _DeliverListViewState extends State<DeliverListView> {
               )
             : receiveList!.isNotEmpty
                 ? Expanded(
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(bottom: 30),
-                      shrinkWrap: true,
-                      itemCount: receiveList!.length,
-                      itemBuilder: (context, index) {
-                        final Pedido deliver = receiveList![index];
-                        return GestureDetector(
-                          onTap: () {
-                            // Navigator.push<void>(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ReceiveItem(receive: receive),
-                            //   ),
-                            // );
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 15),
-                            padding: const EdgeInsets.all(20),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        await getAllPendingReceives(
+                            '', authBloc2.user['id'].toString());
+                      },
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 30),
+                        shrinkWrap: true,
+                        itemCount: receiveList!.length,
+                        itemBuilder: (context, index) {
+                          final Pedido deliver = receiveList![index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Navigator.push<void>(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => ReceiveItem(receive: receive),
+                              //   ),
+                              // );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 15),
+                              padding: const EdgeInsets.all(20),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    offset: Offset(0, 5),
+                                    blurRadius: 4,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  offset: Offset(0, 5),
-                                  blurRadius: 4,
-                                  spreadRadius: 1,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Icon(Icons.label),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(deliver.codigo ?? ''),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(deliver.correlativo ?? ''),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                deliver.direccionDt.direccion.correlativo !=
-                                        null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Icon(Icons.abc),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(deliver.direccionDt
-                                                .direccion.correlativo!),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                deliver.direccionDt.direccion.correlativo !=
-                                        null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Icon(Icons.account_circle_outlined),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(deliver.cRazonsocial ?? ''),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Icon(Icons.event),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(deliver.createdAt.toString()),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                deliver.direccionDt.direccion
-                                                .reprogramaciones !=
-                                            null &&
-                                        deliver.direccionDt.direccion
-                                            .reprogramaciones!.isNotEmpty
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Icon(
-                                            Icons.warning,
-                                            color: Colors.red,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                              'Reprogramaciones: ${deliver.direccionDt.direccion.reprogramaciones!.length.toString()}',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.red,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.label),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(deliver.codigo ?? ''),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(deliver.correlativo ?? ''),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  deliver.direccionDt.direccion.correlativo !=
+                                          null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.abc),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(deliver.direccionDt
+                                                  .direccion.correlativo!),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  deliver.direccionDt.direccion.correlativo !=
+                                          null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.account_circle_outlined),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(deliver.cRazonsocial ?? ''),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.event),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child:
+                                            Text(deliver.createdAt.toString()),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  deliver.direccionDt.direccion
+                                                  .reprogramaciones !=
+                                              null &&
+                                          deliver.direccionDt.direccion
+                                              .reprogramaciones!.isNotEmpty
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                              Icons.warning,
+                                              color: Colors.red,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                'Reprogramaciones: ${deliver.direccionDt.direccion.reprogramaciones!.length.toString()}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                              ],
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   )
                 : Center(
