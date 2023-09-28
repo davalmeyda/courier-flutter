@@ -213,33 +213,28 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                   )
                 : Center(
                     child: Container(
-                        padding: const EdgeInsets.all(20),
-                        // child: StreamBuilder<dynamic>(
-                        //     stream: authBloc2.userStram,
-                        //     builder: (context, snapshot) {
-                        //       if (snapshot.hasData) {
-                        //         return Text(
-                        //           'No hay datos que mostrar' +
-                        //               snapshot.data['id']!.toString(),
-                        //           textAlign: TextAlign.center,
-                        //           style: TextStyle(
-                        //               fontWeight: FontWeight.bold, fontSize: 16),
-                        //         );
-                        //       } else {
-                        //         return const Text(
-                        //           'No hay datos que mostrar',
-                        //           textAlign: TextAlign.center,
-                        //           style: TextStyle(
-                        //               fontWeight: FontWeight.bold, fontSize: 16),
-                        //         );
-                        //       }
-                        //     }),
-                        child: const Text(
-                          'No hay datos que mostrar',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        )),
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'No hay datos que mostrar',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const SizedBox(width: 30),
+                          ElevatedButton(
+                            onPressed: () {
+                              getAllPendingReceives(
+                                  '', authBloc2.user['id'].toString());
+                            },
+                            child: const Icon(Icons.replay),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
       ],
     );

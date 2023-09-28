@@ -239,11 +239,25 @@ class _DeliverListViewState extends State<DeliverListView> {
                 : Center(
                     child: Container(
                       padding: const EdgeInsets.all(20),
-                      child: const Text(
-                        'No hay datos que mostrar',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'No hay datos que mostrar',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const SizedBox(width: 30),
+                          ElevatedButton(
+                            onPressed: () {
+                              getAllPendingReceives(
+                                  '', authBloc2.user['id'].toString());
+                            },
+                            child: const Icon(Icons.replay),
+                          ),
+                        ],
                       ),
                     ),
                   ),
