@@ -25,7 +25,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
   Agencia? deliverAgency;
   String messageStatus = 'Escanee el código de barras';
   int? amount = 0;
-  List<File>? deliverPhotos;
+  List<File>? deliverPhotos = [];
   bool? loading;
 
   @override
@@ -473,38 +473,63 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                 deliverAgency?.id == 3
                                     ? const SizedBox(height: 20)
                                     : const SizedBox(),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    final picker = ImagePicker();
-                                    final pickedFiles =
-                                        await picker.pickMultiImage();
-                                    if (pickedFiles.isNotEmpty) {
-                                      setState(() {
-                                        deliverPhotos = pickedFiles
-                                            .map((e) => File.fromUri(
-                                                  Uri(path: e.path),
-                                                ))
-                                            .toList();
-                                      });
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: deliverPhotos != null
-                                        ? Colors.grey
-                                        : Colors.blue,
+                                if (deliverPhotos!.isEmpty)
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final picker = ImagePicker();
+                                      final pickedFiles =
+                                          await picker.pickMultiImage();
+                                      if (pickedFiles.isNotEmpty) {
+                                        setState(() {
+                                          deliverPhotos = pickedFiles
+                                              .map((e) => File.fromUri(
+                                                    Uri(path: e.path),
+                                                  ))
+                                              .toList();
+                                        });
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: deliverPhotos != null
+                                          ? Colors.grey
+                                          : Colors.blue,
+                                    ),
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.photo, color: Colors.white),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          'Foto de entrega',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                else
+                                  ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      final image = deliverPhotos![index];
+                                      return ListTile(
+                                        leading: Image.asset(
+                                          image.path.toString(),
+                                        ),
+                                        title: Text('Imagen $index'),
+                                        trailing: IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {
+                                            setState(() {
+                                              deliverPhotos!.removeAt(index);
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    itemCount: deliverPhotos!.length,
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
                                   ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.photo, color: Colors.white),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        'Foto de entrega',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                                 const SizedBox(height: 50),
                                 Row(
                                   mainAxisAlignment:
