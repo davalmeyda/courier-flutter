@@ -74,18 +74,34 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime) > const Duration(seconds: 3)) {
+      final response = await http.get(
+        Uri.parse(
+            '${EnvironmentVariables.baseUrl}pedido/consultaCodigo/$code?idUser=${authBloc2.user['id']}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      final map = json.decode(response.body) as Map<String, dynamic>;
       FlutterBeep.beep();
 
       currentBackPressTime = now;
-
-      if (code!.isNotEmpty) {
-        if (receiveListToConfirm!.isNotEmpty &&
-            receiveListToConfirm!.any((element) => code == element)) {
-          return;
+      if (map['statusCode'] == 200) {
+        if (code!.isNotEmpty) {
+          if (receiveListToConfirm!.isNotEmpty &&
+              receiveListToConfirm!.any((element) => code == element)) {
+            return;
+          }
+          setState(() {
+            receiveListToConfirm!.add(code);
+          });
         }
-        setState(() {
-          receiveListToConfirm!.add(code);
-        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(map['message']),
+            duration: const Duration(milliseconds: 1000),
+          ),
+        );
       }
     }
   }
