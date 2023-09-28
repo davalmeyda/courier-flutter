@@ -91,12 +91,12 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
       });
       return;
     }
-    final request = http.MultipartRequest(
-      'PUT',
-      Uri.parse(
-          'http://192.168.1.73:3000/pedido/imagenDespacho/${deliver?.codigo}?user_id=${authBloc2.user['id']}&importe=$amount'),
-    );
     for (var element in deliverPhotos!) {
+      final request = http.MultipartRequest(
+        'PUT',
+        Uri.parse(
+            'http://192.168.1.73:3000/pedido/imagenDespacho/${deliver?.codigo}?user_id=${authBloc2.user['id']}&importe=$amount'),
+      );
       // TODO: Cambiar la lógica de imágenes
       request.files.add(
         http.MultipartFile(
@@ -106,22 +106,21 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
           filename: element.path.split('/').last,
         ),
       );
+      await request.send();
     }
-    final response = await request.send();
+    final response = await http.put(
+      Uri.parse(
+          'http://192.168.1.73:3000/pedido/entregar/${deliver?.codigo}?idUser=${authBloc2.user['id']}&importe=$amount'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    debugPrint(response.statusCode.toString());
+    debugPrint(response.body);
     if (response.statusCode == 200) {
-      final response = await http.put(
-        Uri.parse(
-            'http://192.168.1.73:3000/pedido/entregar/${deliver?.codigo}?idUser=${authBloc2.user['id']}&importe=$amount'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-      debugPrint(response.statusCode.toString());
-      debugPrint(response.body);
-      if (response.statusCode == 200) {
-        Navigator.popAndPushNamed(context, HomeView.route);
-      }
+      Navigator.popAndPushNamed(context, HomeView.route);
     }
+
     setState(() {
       loading = false;
     });
