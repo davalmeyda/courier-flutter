@@ -509,26 +509,55 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                   )
                                 else
                                   ListView.builder(
-                                    itemBuilder: (context, index) {
-                                      final image = deliverPhotos![index];
-                                      return ListTile(
-                                        leading: Image.asset(
-                                          image.path.toString(),
-                                        ),
-                                        title: Text('Imagen $index'),
-                                        trailing: IconButton(
-                                          icon: const Icon(Icons.delete),
-                                          onPressed: () {
-                                            setState(() {
-                                              deliverPhotos!.removeAt(index);
-                                            });
-                                          },
-                                        ),
-                                      );
-                                    },
                                     itemCount: deliverPhotos!.length,
                                     shrinkWrap: true,
                                     physics: const BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      // return ListTile(
+                                      //   leading: Image.asset(
+                                      //     image.path.toString(),
+                                      //   ),
+                                      //   title: Text('Imagen $index'),
+                                      //   trailing: IconButton(
+                                      //     icon: const Icon(Icons.delete),
+                                      //     onPressed: () {
+                                      //       setState(() {
+                                      //         deliverPhotos!.removeAt(index);
+                                      //       });
+                                      //     },
+                                      //   ),
+                                      // );
+                                      return Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            Image.file(
+                                              deliverPhotos![index],
+                                              width: 80,
+                                              height: 80,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Text(
+                                                'Imagen $index',
+                                                style: const TextStyle(
+                                                    fontSize: 16),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.delete),
+                                              onPressed: () {
+                                                setState(() {
+                                                  deliverPhotos!
+                                                      .removeAt(index);
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
                                   ),
                                 const SizedBox(height: 50),
                                 Row(
