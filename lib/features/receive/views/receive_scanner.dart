@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
@@ -106,13 +105,13 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                       receiveListToConfirm!.add(code);
                     });
                   }
-                  final player = AudioPlayer();
-                  await player.setSource(AssetSource('audio/scanner.mp3'));
-                  await player.resume();
-                  await player.stop();
-                  Timer(const Duration(seconds: 3), () {
-                    debugPrint('timer');
-                  });
+                  // final player = AudioPlayer();
+                  // await player.setSource(AssetSource('audio/scanner.mp3'));
+                  // await player.resume();
+                  // await player.stop();
+                  // Timer(const Duration(seconds: 3), () {
+                  //   debugPrint('timer');
+                  // });
                 },
               ),
             ),
