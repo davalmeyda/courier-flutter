@@ -1,16 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-// import 'package:audioplayers/audioplayers.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
-import 'package:scanner_qr/features/auth/bloc/auth_bloc.dart';
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/models/models.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scanner_qr/shared/config/config.dart';
+import 'package:scanner_qr/shared/utils/alert.dart';
+import 'package:scanner_qr/shared/utils/compress_image.dart';
 
 class DeliverScannerView extends StatefulWidget {
   const DeliverScannerView({super.key});
@@ -115,10 +117,20 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    debugPrint(response.statusCode.toString());
-    debugPrint(response.body);
-    if (response.statusCode == 200) {
+
+    final map = json.decode(response.body) as Map<String, dynamic>;
+
+    if (map['statusCode'] == 200) {
       Navigator.popAndPushNamed(context, HomeView.route);
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => showSimpleDialog(
+          'Error',
+          map['message'],
+          context,
+        ),
+      );
     }
 
     setState(() {
@@ -132,16 +144,6 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
         appBar: AppBar(
           title: const Text('Despachar'),
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        // floatingActionButton: receiveListToConfirm!.isNotEmpty
-        //     ? FloatingActionButton.extended(
-        //         onPressed: () {
-        //           changeStatusManyReceives(context);
-        //         },
-        //         label: const Text('Confirmar'),
-        //         icon: const Icon(Icons.check),
-        //       )
-        //     : null,
         body: Container(
           child: deliver != null
               ? Container(
@@ -473,35 +475,82 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                 deliverAgency?.id == 3
                                     ? const SizedBox(height: 20)
                                     : const SizedBox(),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    final picker = ImagePicker();
-                                    final pickedFiles =
-                                        await picker.pickMultiImage();
-                                    if (pickedFiles.isNotEmpty) {
-                                      setState(() {
-                                        deliverPhotos = pickedFiles
-                                            .map((e) => File.fromUri(
-                                                  Uri(path: e.path),
-                                                ))
-                                            .toList();
-                                      });
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                  ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.photo, color: Colors.white),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        'Agregar fotos',
-                                        style: TextStyle(color: Colors.white),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        final picker = ImagePicker();
+                                        final pickedFiles =
+                                            await picker.pickMultiImage();
+                                        if (pickedFiles.isNotEmpty) {
+                                          final List<File> compressedImages =
+                                              [];
+                                          for (var pickedFile in pickedFiles) {
+                                            var result =
+                                                await compressImage(pickedFile);
+                                            compressedImages.add(result);
+                                          }
+                                          setState(() {
+                                            deliverPhotos = compressedImages;
+                                          });
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blue,
                                       ),
-                                    ],
-                                  ),
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.photo_library,
+                                              color: Colors.white),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            'Galería',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        final picker = ImagePicker();
+                                        final pickedFile =
+                                            await picker.pickImage(
+                                                source: ImageSource.camera);
+                                        if (pickedFile != null) {
+                                          final List<File> compressedImages =
+                                              deliverPhotos ?? [];
+                                          var result =
+                                              await compressImage(pickedFile);
+                                          compressedImages.add(result);
+                                          setState(() {
+                                            deliverPhotos = compressedImages;
+                                          });
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blue,
+                                      ),
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.photo_camera,
+                                              color: Colors.white),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            'Cámara',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 20),
                                 ListView.builder(

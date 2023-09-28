@@ -109,7 +109,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                       shrinkWrap: true,
                       itemCount: receiveList!.length,
                       itemBuilder: (context, index) {
-                        final Pedido receive = receiveList![index];
+                        final Pedido deliver = receiveList![index];
                         return GestureDetector(
                           onTap: () {
                             // Navigator.push<void>(
@@ -145,20 +145,39 @@ class _DeliverListViewState extends State<DeliverListView> {
                                     const Icon(Icons.label),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(receive.codigo ?? ''),
+                                      child: Text(deliver.codigo ?? ''),
                                     ),
                                     const SizedBox(width: 10),
-                                    Text(receive.correlativo ?? ''),
+                                    Text(deliver.correlativo ?? ''),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
+                                deliver.direccionDt.direccion.correlativo !=
+                                        null
+                                    ? Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Icon(Icons.abc),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(deliver.direccionDt
+                                                .direccion.correlativo!),
+                                          ),
+                                        ],
+                                      )
+                                    : const SizedBox(),
+                                deliver.direccionDt.direccion.correlativo !=
+                                        null
+                                    ? const SizedBox(height: 10)
+                                    : const SizedBox(),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Icon(Icons.account_circle_outlined),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(receive.cRazonsocial ?? ''),
+                                      child: Text(deliver.cRazonsocial ?? ''),
                                     ),
                                   ],
                                 ),
@@ -169,15 +188,15 @@ class _DeliverListViewState extends State<DeliverListView> {
                                     const Icon(Icons.event),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(receive.createdAt.toString()),
+                                      child: Text(deliver.createdAt.toString()),
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
-                                receive.direccionDt.direccion
+                                deliver.direccionDt.direccion
                                                 .reprogramaciones !=
                                             null &&
-                                        receive.direccionDt.direccion
+                                        deliver.direccionDt.direccion
                                             .reprogramaciones!.isNotEmpty
                                     ? Row(
                                         crossAxisAlignment:
@@ -190,7 +209,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                                           const SizedBox(width: 10),
                                           Expanded(
                                             child: Text(
-                                              'Reprogramaciones: ${receive.direccionDt.direccion.reprogramaciones!.length.toString()}',
+                                              'Reprogramaciones: ${deliver.direccionDt.direccion.reprogramaciones!.length.toString()}',
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.red,

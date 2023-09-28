@@ -154,6 +154,25 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                   ],
                                 ),
                                 const SizedBox(height: 10),
+                                receive.direccionDt.direccion.correlativo !=
+                                        null
+                                    ? Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Icon(Icons.abc),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(receive.direccionDt
+                                                .direccion.correlativo!),
+                                          ),
+                                        ],
+                                      )
+                                    : const SizedBox(),
+                                receive.direccionDt.direccion.correlativo !=
+                                        null
+                                    ? const SizedBox(height: 10)
+                                    : const SizedBox(),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

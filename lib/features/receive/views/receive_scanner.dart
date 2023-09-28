@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
@@ -7,6 +9,7 @@ import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/shared/config/config.dart';
+import 'package:scanner_qr/shared/utils/alert.dart';
 
 class ReceiveScannerView extends StatefulWidget {
   const ReceiveScannerView({super.key});
@@ -17,6 +20,7 @@ class ReceiveScannerView extends StatefulWidget {
 
 class _ReceiveScannerViewState extends State<ReceiveScannerView> {
   List<String>? receiveListToConfirm = [];
+  String? errorMessage;
   bool loading = false;
 
   @override
@@ -45,7 +49,17 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
       setState(() {
         receiveListToConfirm!.clear();
       });
+      QrCameraState().stop();
       Navigator.popAndPushNamed(context, HomeView.route);
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => showSimpleDialog(
+          'Error',
+          map['message'],
+          context,
+        ),
+      );
     }
 
     setState(() {
@@ -76,6 +90,10 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
               width: double.infinity,
               color: Colors.black,
               child: QrCamera(
+                onError: (context, error) => Text(
+                  error.toString(),
+                  style: const TextStyle(color: Colors.red),
+                ),
                 cameraDirection: CameraDirection.BACK,
                 qrCodeCallback: (code) async {
                   if (code!.isNotEmpty) {
