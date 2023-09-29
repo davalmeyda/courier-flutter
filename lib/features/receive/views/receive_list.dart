@@ -15,7 +15,7 @@ class ReceiveListView extends StatefulWidget {
 
 class _ReceiveListViewState extends State<ReceiveListView> {
   bool loading = false;
-  List<Pedido>? receiveList = [];
+  List<Direccion>? receiveList = [];
 
   @override
   void initState() {
@@ -35,9 +35,9 @@ class _ReceiveListViewState extends State<ReceiveListView> {
         });
     final map = json.decode(response.body) as Map<String, dynamic>;
     debugPrint(map.toString());
-    final pedidos = Pedido.fromJsonList(map['body'][0]);
+    final direcciones = Direccion.fromJsonList(map['body'][0]);
     setState(() {
-      receiveList = pedidos;
+      receiveList = direcciones;
       loading = false;
     });
   }
@@ -106,17 +106,18 @@ class _ReceiveListViewState extends State<ReceiveListView> {
             : receiveList!.isNotEmpty
                 ? Expanded(
                     child: RefreshIndicator(
+                      triggerMode: RefreshIndicatorTriggerMode.anywhere,
                       onRefresh: () async {
                         getAllPendingReceives(
                             '', authBloc2.user['id'].toString());
                       },
                       child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
+                        physics: const AlwaysScrollableScrollPhysics(),
                         padding: const EdgeInsets.only(bottom: 30),
                         shrinkWrap: true,
                         itemCount: receiveList!.length,
                         itemBuilder: (context, index) {
-                          final Pedido receive = receiveList![index];
+                          final Direccion adresses = receiveList![index];
                           return GestureDetector(
                             onTap: () {
                               // Navigator.push<void>(
@@ -150,35 +151,42 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(Icons.label),
-                                      const SizedBox(width: 10),
                                       Expanded(
-                                        child: Text(receive.codigo ?? ''),
+                                        child: Column(
+                                          children: adresses.direciones!.map(
+                                            (DireccionDt orderDetail) {
+                                              return Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.label,
+                                                    color:
+                                                        orderDetail.recibido !=
+                                                                1
+                                                            ? Colors.black
+                                                            : Colors.green,
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    orderDetail.codigo ?? '',
+                                                    style: TextStyle(
+                                                      color: orderDetail
+                                                                  .recibido !=
+                                                              1
+                                                          ? Colors.black
+                                                          : Colors.green,
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ).toList(),
+                                        ),
                                       ),
                                       const SizedBox(width: 10),
-                                      Text(receive.correlativo ?? ''),
+                                      Text(adresses.correlativo ?? ''),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
-                                  receive.direccionDt.direccion.correlativo !=
-                                          null
-                                      ? Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Icon(Icons.abc),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: Text(receive.direccionDt
-                                                  .direccion.correlativo!),
-                                            ),
-                                          ],
-                                        )
-                                      : const SizedBox(),
-                                  receive.direccionDt.direccion.correlativo !=
-                                          null
-                                      ? const SizedBox(height: 10)
-                                      : const SizedBox(),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -186,7 +194,8 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                       const Icon(Icons.account_circle_outlined),
                                       const SizedBox(width: 10),
                                       Expanded(
-                                        child: Text(receive.cRazonsocial ?? ''),
+                                        child: Text(
+                                            adresses.nombreContacto ?? '-'),
                                       ),
                                     ],
                                   ),
@@ -195,11 +204,10 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(Icons.event),
+                                      const Icon(Icons.pin_drop),
                                       const SizedBox(width: 10),
                                       Expanded(
-                                        child:
-                                            Text(receive.createdAt.toString()),
+                                        child: Text(adresses.direccion ?? '-'),
                                       ),
                                     ],
                                   ),

@@ -19,13 +19,13 @@ class DeliverRescheduleView extends StatefulWidget {
     required this.deliver,
   });
   static const String route = 'DeliverScannerView';
-  final Pedido deliver;
+  final Direccion deliver;
   @override
   State<DeliverRescheduleView> createState() => _DeliverRescheduleViewState();
 }
 
 class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
-  Pedido? deliver;
+  Direccion? deliver;
   String? reason;
   List<File>? deliverPhotos = [];
 
@@ -42,9 +42,10 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
     if (reason == null || reason!.length < 5) {
       return;
     }
+
     final response = await http.put(
       Uri.parse(
-          '${EnvironmentVariables.baseUrl}pedido/reprogramar/${deliver?.codigo}?idUser=${authBloc2.user['id']}&motivo=$reason'),
+          '${EnvironmentVariables.baseUrl}pedido/reprogramar/${deliver!.id}?idUser=${authBloc2.user['id']}&motivo=$reason'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -56,7 +57,7 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
         final request = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              '${EnvironmentVariables.baseUrl}pedido/imagenReprogramacion/${deliver?.codigo}?user_id=${authBloc2.user['id']}&reprogramacion_id=$idReschedule'),
+              '${EnvironmentVariables.baseUrl}pedido/imagenReprogramacion/${deliver!.id}?user_id=${authBloc2.user['id']}&reprogramacion_id=$idReschedule'),
         );
         request.files.add(
           http.MultipartFile(
@@ -116,7 +117,7 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
                             const Text('Código:'),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: Text(deliver!.codigo ?? ''),
+                              child: Text(deliver!.correlativo ?? ''),
                             ),
                           ],
                         ),
@@ -124,30 +125,26 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Pedido:'),
-                            const SizedBox(width: 10),
                             Expanded(
-                              child: Text(deliver!.correlativo ?? ''),
+                              child: Column(
+                                children: deliver!.direciones!.map(
+                                  (DireccionDt orderDetail) {
+                                    if (orderDetail.recibido != 0) {
+                                      return Row(
+                                        children: [
+                                          Text(
+                                            orderDetail.codigo ?? '',
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                    return const SizedBox();
+                                  },
+                                ).toList(),
+                              ),
                             ),
                           ],
                         ),
-                        deliver!.direccionDt.direccion.correlativo != null
-                            ? const SizedBox(height: 10)
-                            : const SizedBox(),
-                        deliver!.direccionDt.direccion.correlativo != null
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Dirección:'),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(deliver!.direccionDt.direccion
-                                            .correlativo ??
-                                        ''),
-                                  ),
-                                ],
-                              )
-                            : const SizedBox(),
                         const SizedBox(height: 20),
                         TextFormField(
                           maxLines: 5,

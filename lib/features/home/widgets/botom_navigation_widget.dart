@@ -13,23 +13,42 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthBloc>().state;
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.shifting,
+    return NavigationBar(
+      onDestinationSelected: (value) =>
+          context.read<AuthBloc>().add(ChangeIndex(value)),
+      selectedIndex: state.selectedIndex,
+      indicatorColor: Colors.white,
+      backgroundColor: Colors.blue,
+      labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       elevation: 0,
-      currentIndex: state.selectedIndex,
-      onTap: (value) => context.read<AuthBloc>().add(ChangeIndex(value)),
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.help_center),
+      destinations: const [
+        NavigationDestination(
+          icon: Icon(Icons.trolley),
           label: 'Recepción',
-          backgroundColor: Colors.blue,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: Icon(Icons.local_shipping),
           label: 'Despacho',
-          backgroundColor: Colors.blue,
         ),
       ],
     );
+    // return BottomNavigationBar(
+    //   type: BottomNavigationBarType.shifting,
+    //   elevation: 0,
+    //   currentIndex: state.selectedIndex,
+    //   onTap: (value) => context.read<AuthBloc>().add(ChangeIndex(value)),
+    //   items: const [
+    //     BottomNavigationBarItem(
+    //       icon: Icon(Icons.trolley),
+    //       label: 'Recepción',
+    //       backgroundColor: Colors.blue,
+    //     ),
+    //     BottomNavigationBarItem(
+    //       icon: Icon(Icons.local_shipping),
+    //       label: 'Despacho',
+    //       backgroundColor: Colors.blue,
+    //     ),
+    //   ],
+    // );
   }
 }

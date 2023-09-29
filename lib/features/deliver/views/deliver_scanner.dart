@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
@@ -22,7 +23,7 @@ class DeliverScannerView extends StatefulWidget {
 }
 
 class _DeliverScannerViewState extends State<DeliverScannerView> {
-  Pedido? deliver;
+  Direccion? adress;
   Cliente? client;
   Ubicacion? deliverLocation;
   Agencia? deliverAgency;
@@ -30,6 +31,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
   int? amount = 0;
   List<File>? deliverPhotos = [];
   bool? loading;
+  dynamic currentBackPressTime;
 
   @override
   void initState() {
@@ -40,48 +42,53 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
     setState(() {
       messageStatus = 'Buscando...';
     });
-    final response = await http.get(
-      Uri.parse('${EnvironmentVariables.baseUrl}pedido/$deliverCode'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    final map = json.decode(response.body) as Map<String, dynamic>;
-    debugPrint(map.toString());
-
-    if (map['statusCode'] == 200) {
-      if (map['body']['pedido'] == null) {
-        setState(() {
-          messageStatus = 'No se encontró el pedido';
-        });
-        return;
-      }
-      if (map['body']['cliente'] != null) {
-        setState(() {
-          client = Cliente.fromJson(map['body']['cliente']);
-        });
-      }
-      if (map['body']['ubicacion'] != null) {
-        setState(() {
-          deliverLocation = Ubicacion.fromJson(map['body']['ubicacion']);
-        });
-      }
-      if (map['body']['agencia'] != null) {
-        setState(() {
-          deliverAgency = Agencia.fromJson(map['body']['agencia']);
-        });
-      }
-      setState(() {
-        deliver = Pedido.fromJson(map['body']['pedido']);
-        messageStatus = 'Escanee el código de barras';
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(map['message']),
-          duration: const Duration(milliseconds: 1000),
-        ),
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > const Duration(seconds: 3)) {
+      final response = await http.get(
+        Uri.parse('${EnvironmentVariables.baseUrl}pedido/$deliverCode'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
       );
+      final map = json.decode(response.body) as Map<String, dynamic>;
+      FlutterBeep.beep();
+      currentBackPressTime = now;
+
+      if (map['statusCode'] == 200) {
+        if (map['body']['direccion'] == null) {
+          setState(() {
+            messageStatus = 'No se encontró el pedido';
+          });
+          return;
+        }
+        if (map['body']['cliente'] != null) {
+          setState(() {
+            client = Cliente.fromJson(map['body']['cliente']);
+          });
+        }
+        if (map['body']['ubicacion'] != null) {
+          setState(() {
+            deliverLocation = Ubicacion.fromJson(map['body']['ubicacion']);
+          });
+        }
+        if (map['body']['agencia'] != null) {
+          setState(() {
+            deliverAgency = Agencia.fromJson(map['body']['agencia']);
+          });
+        }
+        setState(() {
+          adress = Direccion.fromJson(map['body']['direccion']);
+          messageStatus = 'Escanee el código de barras';
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(map['message']),
+            duration: const Duration(milliseconds: 1000),
+          ),
+        );
+      }
     }
   }
 
@@ -89,51 +96,68 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
     setState(() {
       loading = true;
     });
-    debugPrint(deliver?.codigo);
-    debugPrint(amount.toString());
     if (deliverPhotos == null || deliverPhotos!.isEmpty) {
       setState(() {
         loading = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Debe adjuntar una imagen'),
+          duration: Duration(milliseconds: 1000),
+        ),
+      );
       return;
     }
-    for (var element in deliverPhotos!) {
-      final request = http.MultipartRequest(
-        'PUT',
+    List<DireccionDt> orders =
+        adress?.direciones != null ? adress!.direciones! : [];
+    for (var order in orders) {
+      if (order.recibido == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No ha sido recibido'),
+            duration: Duration(milliseconds: 1000),
+          ),
+        );
+        return;
+      }
+      for (var element in deliverPhotos!) {
+        final request = http.MultipartRequest(
+          'PUT',
+          Uri.parse(
+              '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${order.pedido?.codigo}?user_id=${authBloc2.user['id']}&importe=$amount'),
+        );
+        request.files.add(
+          http.MultipartFile(
+            'imagen',
+            element.readAsBytes().asStream(),
+            element.lengthSync(),
+            filename: element.path.split('/').last,
+          ),
+        );
+        await request.send();
+      }
+      final response = await http.put(
         Uri.parse(
-            '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${deliver?.codigo}?user_id=${authBloc2.user['id']}&importe=$amount'),
+            '${EnvironmentVariables.baseUrl}pedido/entregar/${order.pedido?.codigo}?idUser=${authBloc2.user['id']}&importe=$amount'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
       );
-      request.files.add(
-        http.MultipartFile(
-          'imagen',
-          element.readAsBytes().asStream(),
-          element.lengthSync(),
-          filename: element.path.split('/').last,
-        ),
-      );
-      await request.send();
-    }
-    final response = await http.put(
-      Uri.parse(
-          '${EnvironmentVariables.baseUrl}pedido/entregar/${deliver?.codigo}?idUser=${authBloc2.user['id']}&importe=$amount'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
 
-    final map = json.decode(response.body) as Map<String, dynamic>;
+      final map = json.decode(response.body) as Map<String, dynamic>;
 
-    if (map['statusCode'] == 200) {
-      Navigator.popAndPushNamed(context, HomeView.route);
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => showSimpleDialog(
-          'Error',
-          map['message'],
-          context,
-        ),
-      );
+      if (map['statusCode'] == 200) {
+        Navigator.popAndPushNamed(context, HomeView.route);
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => showSimpleDialog(
+            'Error',
+            map['message'],
+            context,
+          ),
+        );
+      }
     }
 
     setState(() {
@@ -148,7 +172,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
           title: const Text('Despachar'),
         ),
         body: Container(
-          child: deliver != null
+          child: adress != null
               ? Container(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -176,49 +200,17 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Código:'),
+                                    const Text('Correlativo:'),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: Text(deliver!.codigo ?? ''),
+                                      child: Text(adress!.correlativo ?? ''),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Correlativo de pedido:'),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(deliver!.correlativo ?? ''),
-                                    ),
-                                  ],
-                                ),
-                                deliver!.direccionDt.direccion.correlativo !=
-                                        null
+                                adress!.direccion != null
                                     ? const SizedBox(height: 10)
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.correlativo !=
-                                        null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text(
-                                              'Correlativo de dirección:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(deliver!.direccionDt
-                                                    .direccion.correlativo ??
-                                                ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                deliver!.direccionDt.direccion.direccion != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                deliver!.direccionDt.direccion.direccion != null
+                                adress!.direccion != null
                                     ? Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -226,19 +218,16 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                           const Text('Dirección:'),
                                           const SizedBox(width: 10),
                                           Expanded(
-                                            child: Text(deliver!.direccionDt
-                                                    .direccion.direccion ??
-                                                ''),
+                                            child:
+                                                Text(adress!.direccion ?? ''),
                                           ),
                                         ],
                                       )
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.departamento !=
-                                        null
+                                adress!.departamento != null
                                     ? const SizedBox(height: 10)
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.departamento !=
-                                        null
+                                adress!.departamento != null
                                     ? Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -246,17 +235,16 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                           const Text('Departamento:'),
                                           const SizedBox(width: 10),
                                           Expanded(
-                                            child: Text(deliver!.direccionDt
-                                                    .direccion.departamento ??
-                                                ''),
+                                            child: Text(
+                                                adress!.departamento ?? ''),
                                           ),
                                         ],
                                       )
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.provincia != null
+                                adress!.provincia != null
                                     ? const SizedBox(height: 10)
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.provincia != null
+                                adress!.provincia != null
                                     ? Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -264,17 +252,16 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                           const Text('Provincia:'),
                                           const SizedBox(width: 10),
                                           Expanded(
-                                            child: Text(deliver!.direccionDt
-                                                    .direccion.provincia ??
-                                                ''),
+                                            child:
+                                                Text(adress!.provincia ?? ''),
                                           ),
                                         ],
                                       )
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.distrito != null
+                                adress!.distrito != null
                                     ? const SizedBox(height: 10)
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.distrito != null
+                                adress!.distrito != null
                                     ? Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -282,19 +269,15 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                           const Text('Distrito:'),
                                           const SizedBox(width: 10),
                                           Expanded(
-                                            child: Text(deliver!.direccionDt
-                                                    .direccion.distrito ??
-                                                ''),
+                                            child: Text(adress!.distrito ?? ''),
                                           ),
                                         ],
                                       )
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.referencia !=
-                                        null
+                                adress!.referencia != null
                                     ? const SizedBox(height: 10)
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.referencia !=
-                                        null
+                                adress!.referencia != null
                                     ? Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -302,19 +285,16 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                           const Text('Referencia:'),
                                           const SizedBox(width: 10),
                                           Expanded(
-                                            child: Text(deliver!.direccionDt
-                                                    .direccion.referencia ??
-                                                ''),
+                                            child:
+                                                Text(adress!.referencia ?? ''),
                                           ),
                                         ],
                                       )
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.observaciones !=
-                                        null
+                                adress!.observaciones != null
                                     ? const SizedBox(height: 10)
                                     : const SizedBox(),
-                                deliver!.direccionDt.direccion.observaciones !=
-                                        null
+                                adress!.observaciones != null
                                     ? Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -322,43 +302,41 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                           const Text('Observaciones:'),
                                           const SizedBox(width: 10),
                                           Expanded(
-                                            child: Text(deliver!.direccionDt
-                                                    .direccion.observaciones ??
-                                                ''),
+                                            child: Text(
+                                                adress!.observaciones ?? ''),
                                           ),
                                         ],
                                       )
                                     : const SizedBox(),
-                                deliver!.condicionEnvio != null
+                                adress!.dniRuc != null
                                     ? const SizedBox(height: 10)
                                     : const SizedBox(),
-                                deliver!.condicionEnvio != null
+                                adress!.dniRuc != null
                                     ? Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text('Condicion de envío:'),
+                                          const Text('Documento:'),
                                           const SizedBox(width: 10),
                                           Expanded(
-                                            child: Text(
-                                                '${deliver!.condicionEnvioCode != null ? '${deliver!.condicionEnvioCode} / ' : ''}${deliver!.condicionEnvio ?? ''}'),
+                                            child: Text(adress!.dniRuc ?? ''),
                                           ),
                                         ],
                                       )
                                     : const SizedBox(),
-                                deliver!.cRazonsocial != null
+                                adress!.nombreContacto != null
                                     ? const SizedBox(height: 10)
                                     : const SizedBox(),
-                                deliver!.cRazonsocial != null
+                                adress!.nombreContacto != null
                                     ? Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text('Razón Social:'),
+                                          const Text('Contacto:'),
                                           const SizedBox(width: 10),
                                           Expanded(
                                             child: Text(
-                                                deliver!.cRazonsocial ?? ''),
+                                                adress!.nombreContacto ?? ''),
                                           ),
                                         ],
                                       )
@@ -450,7 +428,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                         ],
                                       )
                                     : const SizedBox(),
-                                const SizedBox(height: 50),
+                                const SizedBox(height: 10),
                                 deliverAgency?.id == 3
                                     ? Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -476,8 +454,34 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                       )
                                     : const SizedBox(),
                                 deliverAgency?.id == 3
-                                    ? const SizedBox(height: 20)
+                                    ? const SizedBox(height: 10)
                                     : const SizedBox(),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('Pedidos:'),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        children: adress!.direciones!.map(
+                                          (DireccionDt orderDetail) {
+                                            if (orderDetail.recibido != 0) {
+                                              return Row(
+                                                children: [
+                                                  Text(
+                                                    orderDetail.codigo ?? '',
+                                                  ),
+                                                ],
+                                              );
+                                            }
+                                            return const SizedBox();
+                                          },
+                                        ).toList(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -599,7 +603,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                       backgroundColor: Colors.red,
                                     ),
                                     onPressed: () {
-                                      debugPrint(deliver?.codigo);
+                                      debugPrint(adress?.correlativo);
                                     },
                                     child: const Text(
                                       'Rechazar',
@@ -623,7 +627,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 DeliverRescheduleView(
-                                              deliver: deliver!,
+                                              deliver: adress!,
                                             ),
                                           ));
                                     },

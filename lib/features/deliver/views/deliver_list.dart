@@ -15,7 +15,7 @@ class DeliverListView extends StatefulWidget {
 
 class _DeliverListViewState extends State<DeliverListView> {
   bool loading = false;
-  List<Pedido>? receiveList = [];
+  List<Direccion>? receiveList = [];
 
   @override
   void initState() {
@@ -35,9 +35,9 @@ class _DeliverListViewState extends State<DeliverListView> {
         });
     final map = json.decode(response.body) as Map<String, dynamic>;
     debugPrint(map.toString());
-    final pedidos = Pedido.fromJsonList(map['body'][0]);
+    final direcciones = Direccion.fromJsonList(map['body'][0]);
     setState(() {
-      receiveList = pedidos;
+      receiveList = direcciones;
       loading = false;
     });
   }
@@ -108,13 +108,15 @@ class _DeliverListViewState extends State<DeliverListView> {
                         await getAllPendingReceives(
                             '', authBloc2.user['id'].toString());
                       },
+                      triggerMode: RefreshIndicatorTriggerMode.anywhere,
                       child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
+                        physics: const AlwaysScrollableScrollPhysics(),
                         padding: const EdgeInsets.only(bottom: 30),
                         shrinkWrap: true,
+                        // itemCount: 4,
                         itemCount: receiveList!.length,
                         itemBuilder: (context, index) {
-                          final Pedido deliver = receiveList![index];
+                          final Direccion adresses = receiveList![index];
                           return GestureDetector(
                             onTap: () {
                               // Navigator.push<void>(
@@ -148,35 +150,46 @@ class _DeliverListViewState extends State<DeliverListView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(Icons.label),
-                                      const SizedBox(width: 10),
                                       Expanded(
-                                        child: Text(deliver.codigo ?? ''),
+                                        child: Column(
+                                          children: adresses.direciones!.map(
+                                            (DireccionDt orderDetail) {
+                                              if (orderDetail.recibido == 1) {
+                                                return Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.label,
+                                                      color: orderDetail
+                                                                  .entregado !=
+                                                              1
+                                                          ? Colors.black
+                                                          : Colors.green,
+                                                    ),
+                                                    const SizedBox(width: 10),
+                                                    Text(
+                                                      orderDetail.codigo ?? '',
+                                                      style: TextStyle(
+                                                        color: orderDetail
+                                                                    .entregado !=
+                                                                1
+                                                            ? Colors.black
+                                                            : Colors.green,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              } else {
+                                                return const SizedBox();
+                                              }
+                                            },
+                                          ).toList(),
+                                        ),
                                       ),
                                       const SizedBox(width: 10),
-                                      Text(deliver.correlativo ?? ''),
+                                      Text(adresses.correlativo ?? ''),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
-                                  deliver.direccionDt.direccion.correlativo !=
-                                          null
-                                      ? Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Icon(Icons.abc),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: Text(deliver.direccionDt
-                                                  .direccion.correlativo!),
-                                            ),
-                                          ],
-                                        )
-                                      : const SizedBox(),
-                                  deliver.direccionDt.direccion.correlativo !=
-                                          null
-                                      ? const SizedBox(height: 10)
-                                      : const SizedBox(),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -184,7 +197,8 @@ class _DeliverListViewState extends State<DeliverListView> {
                                       const Icon(Icons.account_circle_outlined),
                                       const SizedBox(width: 10),
                                       Expanded(
-                                        child: Text(deliver.cRazonsocial ?? ''),
+                                        child:
+                                            Text(adresses.nombreContacto ?? ''),
                                       ),
                                     ],
                                   ),
@@ -193,20 +207,16 @@ class _DeliverListViewState extends State<DeliverListView> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(Icons.event),
+                                      const Icon(Icons.pin_drop),
                                       const SizedBox(width: 10),
                                       Expanded(
-                                        child:
-                                            Text(deliver.createdAt.toString()),
+                                        child: Text(adresses.direccion ?? ''),
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
-                                  deliver.direccionDt.direccion
-                                                  .reprogramaciones !=
-                                              null &&
-                                          deliver.direccionDt.direccion
-                                              .reprogramaciones!.isNotEmpty
+                                  adresses.reprogramaciones != null &&
+                                          adresses.reprogramaciones!.isNotEmpty
                                       ? Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -218,7 +228,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: Text(
-                                                'Reprogramaciones: ${deliver.direccionDt.direccion.reprogramaciones!.length.toString()}',
+                                                'Reprogramaciones: ${adresses.reprogramaciones!.length.toString()}',
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.red,

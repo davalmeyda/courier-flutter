@@ -1,11 +1,11 @@
-import 'package:scanner_qr/models/reprogramaciones.entity.dart';
+import 'package:scanner_qr/models/models.dart';
 
 class Direccion {
   int id;
   String? correlativo;
   int? idAgencia;
-  int? idUbicacion;
   int? idCliente;
+  int? idUbicacion;
   int? idMotorizado;
   String? dniRuc;
   String? nombreContacto;
@@ -18,21 +18,26 @@ class Direccion {
   String? observaciones;
   String? googleMaps;
   int? estado;
+  String? importe;
   int? recibido;
+  int? entregado;
+  int? confirmado;
+  String? estadoDir;
+  int? estadoDirCode;
+  List<DireccionDt>? direciones;
   List<Reprogramacion>? reprogramaciones;
 
   Direccion({
     required this.id,
-    required this.correlativo,
-    this.idCliente,
+    this.correlativo,
     this.idAgencia,
+    this.idCliente,
     this.idUbicacion,
     this.idMotorizado,
-    this.direccion,
-    this.recibido,
     this.dniRuc,
     this.nombreContacto,
     this.celulares,
+    this.direccion,
     this.departamento,
     this.provincia,
     this.distrito,
@@ -40,6 +45,13 @@ class Direccion {
     this.observaciones,
     this.googleMaps,
     this.estado,
+    this.importe,
+    this.recibido,
+    this.entregado,
+    this.confirmado,
+    this.estadoDir,
+    this.estadoDirCode,
+    this.direciones,
     this.reprogramaciones,
   });
 
@@ -47,8 +59,8 @@ class Direccion {
         id: json["id"],
         correlativo: json["correlativo"],
         idCliente: json["id_cliente"],
-        idAgencia: json["id_cliente"],
-        idUbicacion: json["id_cliente"],
+        idAgencia: json["id_agencia"],
+        idUbicacion: json["id_ubicacion"],
         idMotorizado: json["id_motorizado"],
         direccion: json["direccion"],
         recibido: json["recibido"],
@@ -62,6 +74,12 @@ class Direccion {
         observaciones: json['observaciones'],
         googleMaps: json['google_maps'],
         estado: json['estado'],
+        importe: json['importe'],
+        entregado: json['entregado'],
+        confirmado: json['confirmado'],
+        estadoDir: json['estado_dir'],
+        estadoDirCode: json['estado_dir_code'],
+        direciones: DireccionDt.fromJsonList(json['direciones']),
         reprogramaciones: Reprogramacion.fromJsonList(json['reprogramaciones']),
       );
 

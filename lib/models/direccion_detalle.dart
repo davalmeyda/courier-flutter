@@ -2,17 +2,25 @@ import 'package:scanner_qr/models/models.dart';
 
 class DireccionDt {
   int id;
-  String codigo;
+  String? codigo;
   String? producto;
   int? cantidad;
-  Direccion direccion;
+  int? recibido;
+  int? entregado;
+  int? confirmado;
+  Direccion? direccion;
+  Pedido? pedido;
 
   DireccionDt({
     required this.id,
-    required this.codigo,
-    required this.direccion,
+    this.codigo,
     this.producto,
     this.cantidad,
+    this.recibido,
+    this.entregado,
+    this.confirmado,
+    this.direccion,
+    this.pedido,
   });
 
   factory DireccionDt.fromJson(Map<String, dynamic> json) => DireccionDt(
@@ -20,7 +28,13 @@ class DireccionDt {
         codigo: json["codigo"],
         producto: json["producto"],
         cantidad: json["cantidad"],
-        direccion: Direccion.fromJson(json["direccion"]),
+        recibido: json["recibido"],
+        entregado: json["entregado"],
+        confirmado: json["confirmado"],
+        direccion: json["direccion"] != null
+            ? Direccion.fromJson(json["direccion"])
+            : null,
+        pedido: Pedido.fromJson(json["pedido"]),
       );
 
   static List<DireccionDt> fromJsonList(List<dynamic> jsonList) =>

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/shared/config/config.dart';
+import 'package:scanner_qr/shared/utils/alert.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -27,8 +28,6 @@ class _LoginViewState extends State<LoginView> {
 
   Future<void> iniciarSesion(
       String email, String password, BuildContext context) async {
-    debugPrint(email);
-    debugPrint(password);
     final response = await http.post(
       Uri.parse('${EnvironmentVariables.baseUrl}users/login'),
       headers: <String, String>{
@@ -46,6 +45,15 @@ class _LoginViewState extends State<LoginView> {
       // context.read<AuthBloc>().add(ChangeIdUser(map['body']['id']));
       authBloc2.setUser(map['body']);
       Navigator.pushReplacementNamed(context, HomeView.route);
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => showSimpleDialog(
+          'Error',
+          map['message'],
+          context,
+        ),
+      );
     }
   }
 

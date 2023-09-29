@@ -1,4 +1,4 @@
-import 'package:scanner_qr/models/models.dart';
+import 'package:scanner_qr/models/direccion_detalle.dart';
 
 class Pedido {
   int id;
@@ -7,20 +7,20 @@ class Pedido {
   int? condicionEnvioCode;
   String? codigo;
   String? cRazonsocial;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  DireccionDt direccionDt;
+  String? createdAt;
+  String? updatedAt;
+  DireccionDt? direccionDt;
 
   Pedido({
     required this.id,
     this.correlativo,
-    this.codigo,
-    this.updatedAt,
-    this.createdAt,
     this.condicionEnvio,
     this.condicionEnvioCode,
+    this.codigo,
     this.cRazonsocial,
-    required this.direccionDt,
+    this.createdAt,
+    this.updatedAt,
+    this.direccionDt,
   });
 
   factory Pedido.fromJson(Map<String, dynamic> json) => Pedido(
@@ -30,9 +30,11 @@ class Pedido {
         condicionEnvioCode: json["condicion_envio_code"],
         codigo: json["codigo"],
         cRazonsocial: json["c_razonsocial"],
-        createdAt: DateTime.parse(json["created_at"] ?? ''),
-        updatedAt: DateTime.parse(json["updated_at"] ?? ''),
-        direccionDt: DireccionDt.fromJson(json["direccionDt"]),
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
+        direccionDt: json["direccionDt"] != null
+            ? DireccionDt.fromJson(json["direccionDt"])
+            : null,
       );
 
   static List<Pedido> fromJsonList(List<dynamic> jsonList) =>
