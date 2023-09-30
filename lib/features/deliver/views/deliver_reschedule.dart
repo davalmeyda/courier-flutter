@@ -272,7 +272,7 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
+                              backgroundColor: Colors.blue,
                             ),
                             onPressed: deliverPhotos!.isEmpty ||
                                     (reason == null ? true : reason!.length < 5)

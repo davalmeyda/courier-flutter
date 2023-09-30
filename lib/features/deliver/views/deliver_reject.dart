@@ -52,12 +52,12 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
     );
     final map = json.decode(response.body) as Map<String, dynamic>;
     if (map['statusCode'] == 200) {
-      final idReschedule = json.decode(response.body)['body']['id'];
+      final idRejected = json.decode(response.body)['body']['id'];
       for (var element in deliverPhotos!) {
         final request = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              '${EnvironmentVariables.baseUrl}pedido/imagenRechazar/${deliver!.id}?user_id=${authBloc2.user['id']}&reprogramacion_id=$idReschedule'),
+              '${EnvironmentVariables.baseUrl}pedido/imagenRechazar/${deliver!.id}?user_id=${authBloc2.user['id']}&rechazado_id=$idRejected'),
         );
         request.files.add(
           http.MultipartFile(
@@ -272,7 +272,7 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
+                              backgroundColor: Colors.red,
                             ),
                             onPressed: deliverPhotos!.isEmpty ||
                                     (reason == null ? true : reason!.length < 5)
