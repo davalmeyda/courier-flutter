@@ -90,201 +90,187 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
           title: const Text('No entregado'),
         ),
         body: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          child: Row(
-            children: [
-              Expanded(
-                child: CardWidget(
+          margin: const EdgeInsets.symmetric(vertical: 15),
+          child: Expanded(
+            child: CardWidget(
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('Código:'),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Text(deliver!.correlativo ?? ''),
-                              ),
-                            ],
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Código:'),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(deliver!.correlativo ?? ''),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: deliver!.direciones!.map(
+                              (DireccionDt orderDetail) {
+                                if (orderDetail.recibido != 0) {
+                                  return Row(
+                                    children: [
+                                      Text(
+                                        orderDetail.codigo ?? '',
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                            ).toList(),
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: deliver!.direciones!.map(
-                                    (DireccionDt orderDetail) {
-                                      if (orderDetail.recibido != 0) {
-                                        return Row(
-                                          children: [
-                                            Text(
-                                              orderDetail.codigo ?? '',
-                                            ),
-                                          ],
-                                        );
-                                      }
-                                      return const SizedBox();
-                                    },
-                                  ).toList(),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          TextFormField(
-                            maxLines: 5,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.all(20),
-                              hintText: 'Ingresa el motivo',
-                              border: OutlineInputBorder(),
-                              fillColor: Colors.white,
-                            ),
-                            onChanged: (value) => {
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      maxLines: 5,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(20),
+                        hintText: 'Ingresa el motivo',
+                        border: OutlineInputBorder(),
+                        fillColor: Colors.white,
+                      ),
+                      onChanged: (value) => {
+                        setState(() {
+                          reason = value;
+                        })
+                      },
+                      keyboardType: TextInputType.multiline,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            final picker = ImagePicker();
+                            final pickedFiles = await picker.pickMultiImage();
+                            if (pickedFiles.isNotEmpty) {
+                              final List<File> compressedImages = [];
+                              for (var pickedFile in pickedFiles) {
+                                var result = await compressImage(pickedFile);
+                                compressedImages.add(result);
+                              }
                               setState(() {
-                                reason = value;
-                              })
-                            },
-                            keyboardType: TextInputType.multiline,
+                                deliverPhotos = compressedImages;
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
                           ),
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ElevatedButton(
-                                onPressed: () async {
-                                  final picker = ImagePicker();
-                                  final pickedFiles =
-                                      await picker.pickMultiImage();
-                                  if (pickedFiles.isNotEmpty) {
-                                    final List<File> compressedImages = [];
-                                    for (var pickedFile in pickedFiles) {
-                                      var result =
-                                          await compressImage(pickedFile);
-                                      compressedImages.add(result);
-                                    }
-                                    setState(() {
-                                      deliverPhotos = compressedImages;
-                                    });
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.photo_library,
-                                        color: Colors.white),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'Galería',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  final picker = ImagePicker();
-                                  final pickedFile = await picker.pickImage(
-                                      source: ImageSource.camera);
-                                  if (pickedFile != null) {
-                                    final List<File> compressedImages =
-                                        deliverPhotos ?? [];
-                                    var result =
-                                        await compressImage(pickedFile);
-                                    compressedImages.add(result);
-                                    setState(() {
-                                      deliverPhotos = compressedImages;
-                                    });
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.photo_camera,
-                                        color: Colors.white),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'Cámara',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          ListView.builder(
-                            itemCount: deliverPhotos!.length,
-                            shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Image.file(
-                                        deliverPhotos![index],
-                                        // width: 80,
-                                        height: 80,
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          deliverPhotos!.removeAt(index);
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 50),
-                          SizedBox(
-                            height: 50,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              onPressed: deliverPhotos!.isEmpty ||
-                                      (reason == null
-                                          ? true
-                                          : reason!.length < 5)
-                                  ? null
-                                  : () => confirmReschedule(context),
-                              child: const Text(
-                                'No entregado',
+                              Icon(Icons.photo_library, color: Colors.white),
+                              SizedBox(width: 10),
+                              Text(
+                                'Galería',
                                 style: TextStyle(color: Colors.white),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final picker = ImagePicker();
+                            final pickedFile = await picker.pickImage(
+                                source: ImageSource.camera);
+                            if (pickedFile != null) {
+                              final List<File> compressedImages =
+                                  deliverPhotos ?? [];
+                              var result = await compressImage(pickedFile);
+                              compressedImages.add(result);
+                              setState(() {
+                                deliverPhotos = compressedImages;
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.photo_camera, color: Colors.white),
+                              SizedBox(width: 10),
+                              Text(
+                                'Cámara',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 20),
+                    ListView.builder(
+                      itemCount: deliverPhotos!.length,
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Image.file(
+                                  deliverPhotos![index],
+                                  // width: 80,
+                                  height: 80,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    deliverPhotos!.removeAt(index);
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 50),
+                    SizedBox(
+                      height: 50,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: deliverPhotos!.isEmpty ||
+                                (reason == null ? true : reason!.length < 5)
+                            ? null
+                            : () => confirmReschedule(context),
+                        child: const Text(
+                          'No entregado',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
-            ],
+            ),
           ),
         ));
   }

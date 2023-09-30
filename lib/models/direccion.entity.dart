@@ -17,6 +17,7 @@ class Direccion {
   String? referencia;
   String? observaciones;
   String? googleMaps;
+  String? empresaTransporte;
   int? estado;
   String? importe;
   int? recibido;
@@ -44,6 +45,7 @@ class Direccion {
     this.referencia,
     this.observaciones,
     this.googleMaps,
+    this.empresaTransporte,
     this.estado,
     this.importe,
     this.recibido,
@@ -73,6 +75,7 @@ class Direccion {
         referencia: json['referencia'],
         observaciones: json['observaciones'],
         googleMaps: json['google_maps'],
+        empresaTransporte: json['empresa_transporte'],
         estado: json['estado'],
         importe: json['importe'],
         entregado: json['entregado'],

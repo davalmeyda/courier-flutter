@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CardWidget extends StatelessWidget {
-  final List<Widget> children;
+  final Widget child;
 
-  const CardWidget({Key? key, this.children = const []}) : super(key: key);
+  const CardWidget({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +24,7 @@ class CardWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        children: children,
-      ),
+      child: child,
     );
   }
 }

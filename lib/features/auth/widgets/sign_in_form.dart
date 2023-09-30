@@ -87,12 +87,18 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
           ),
         ),
         const SizedBox(height: 20),
-        FilledButton(
-          onPressed: () async {
-            await iniciarSesion(
-                usuarioController.text, passWordController.text, context);
-          },
-          child: const Text('Ingresar'),
+        Row(
+          children: [
+            Expanded(
+              child: FilledButton(
+                onPressed: () async {
+                  await iniciarSesion(
+                      usuarioController.text, passWordController.text, context);
+                },
+                child: const Text('Ingresar'),
+              ),
+            ),
+          ],
         )
       ],
     );

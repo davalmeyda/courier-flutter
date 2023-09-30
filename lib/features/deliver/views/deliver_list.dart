@@ -143,115 +143,138 @@ class _DeliverListViewState extends State<DeliverListView> {
                               // );
                             },
                             child: CardWidget(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: adresses.direciones!.map(
-                                          (DireccionDt orderDetail) {
-                                            if (orderDetail.recibido == 1) {
-                                              return Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.label,
-                                                    color:
-                                                        orderDetail.entregado !=
-                                                                1
-                                                            ? Colors.black
-                                                            : Colors.green,
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Text(
-                                                    orderDetail.codigo ?? '',
-                                                    style: TextStyle(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          children: adresses.direciones!.map(
+                                            (DireccionDt orderDetail) {
+                                              if (orderDetail.recibido == 1) {
+                                                return Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.label,
                                                       color: orderDetail
                                                                   .entregado !=
                                                               1
                                                           ? Colors.black
                                                           : Colors.green,
                                                     ),
-                                                  ),
-                                                ],
-                                              );
-                                            } else {
-                                              return const SizedBox();
-                                            }
-                                          },
-                                        ).toList(),
+                                                    const SizedBox(width: 10),
+                                                    Text(
+                                                      orderDetail.codigo ?? '',
+                                                      style: TextStyle(
+                                                        color: orderDetail
+                                                                    .entregado !=
+                                                                1
+                                                            ? Colors.black
+                                                            : Colors.green,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              } else {
+                                                return const SizedBox();
+                                              }
+                                            },
+                                          ).toList(),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(adresses.correlativo ?? ''),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                adresses.reprogramaciones != null &&
-                                        adresses.reprogramaciones!.isNotEmpty
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Icon(
-                                            Icons.warning,
-                                            color: Colors.red,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                              'Reprogramaciones: ${adresses.reprogramaciones!.length.toString()}',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.red,
+                                      const SizedBox(width: 10),
+                                      Text(adresses.correlativo ?? ''),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  adresses.reprogramaciones != null &&
+                                          adresses.reprogramaciones!.isNotEmpty
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                              Icons.warning,
+                                              color: Colors.red,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                'Reprogramaciones: ${adresses.reprogramaciones!.length.toString()}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Icon(Icons
-                                                  .account_circle_outlined),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Text(
-                                                    adresses.nombreContacto ??
-                                                        ''),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Icon(Icons.pin_drop),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Text(
-                                                    adresses.direccion ?? ''),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Icon(Icons
+                                                    .account_circle_outlined),
+                                                const SizedBox(width: 10),
+                                                Expanded(
+                                                  child: Text(
+                                                      adresses.nombreContacto ??
+                                                          ''),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Icon(Icons.pin_drop),
+                                                const SizedBox(width: 10),
+                                                Expanded(
+                                                  child: Text(
+                                                      adresses.direccion ?? ''),
+                                                ),
+                                              ],
+                                            ),
+                                            adresses.empresaTransporte == null
+                                                ? const SizedBox()
+                                                : const SizedBox(height: 10),
+                                            adresses.empresaTransporte == null
+                                                ? const SizedBox()
+                                                : Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Icon(Icons
+                                                          .business_outlined),
+                                                      const SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: Text(adresses
+                                                                .empresaTransporte ??
+                                                            ''),
+                                                      ),
+                                                    ],
+                                                  ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    PhoneButtonWidget(
-                                      phone: adresses.celulares ?? '',
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      PhoneButtonWidget(
+                                        phone: adresses.celulares ?? '',
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

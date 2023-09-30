@@ -7,7 +7,6 @@ import 'package:scanner_qr/models/models.dart';
 import 'package:scanner_qr/shared/shared.dart';
 
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
-import 'package:scanner_qr/shared/widgets/phone_button.dart';
 
 class ReceiveListView extends StatefulWidget {
   const ReceiveListView({super.key});
@@ -142,68 +141,92 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                               // );
                             },
                             child: CardWidget(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: adresses.direciones!.map(
-                                          (DireccionDt orderDetail) {
-                                            return Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.label,
-                                                  color:
-                                                      orderDetail.recibido != 1
-                                                          ? Colors.black
-                                                          : Colors.green,
-                                                ),
-                                                const SizedBox(width: 10),
-                                                Text(
-                                                  orderDetail.codigo ?? '',
-                                                  style: TextStyle(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          children: adresses.direciones!.map(
+                                            (DireccionDt orderDetail) {
+                                              return Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.label,
                                                     color:
                                                         orderDetail.recibido !=
                                                                 1
                                                             ? Colors.black
                                                             : Colors.green,
                                                   ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ).toList(),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    orderDetail.codigo ?? '',
+                                                    style: TextStyle(
+                                                      color: orderDetail
+                                                                  .recibido !=
+                                                              1
+                                                          ? Colors.black
+                                                          : Colors.green,
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ).toList(),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(adresses.correlativo ?? ''),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Icon(Icons.account_circle_outlined),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child:
-                                          Text(adresses.nombreContacto ?? '-'),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.pin_drop),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(adresses.direccion ?? '-'),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      const SizedBox(width: 10),
+                                      Text(adresses.correlativo ?? ''),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.account_circle_outlined),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                            adresses.nombreContacto ?? '-'),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.pin_drop),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(adresses.direccion ?? '-'),
+                                      ),
+                                    ],
+                                  ),
+                                  adresses.empresaTransporte == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.empresaTransporte == null
+                                      ? const SizedBox()
+                                      : Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.business_outlined),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adresses.empresaTransporte ??
+                                                      ''),
+                                            ),
+                                          ],
+                                        ),
+                                ],
+                              ),
                             ),
                           );
                         },
