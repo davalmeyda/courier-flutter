@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -50,8 +48,10 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
         receiveListToConfirm!.clear();
       });
       QrCameraState().stop();
+      if (!context.mounted) return;
       Navigator.popAndPushNamed(context, HomeView.route);
     } else {
+      if (!context.mounted) return;
       showDialog(
         context: context,
         builder: (context) => showSimpleDialog(
@@ -96,6 +96,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
           });
         }
       } else {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(map['message']),

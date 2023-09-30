@@ -1,10 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
-import 'dart:convert';
+
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/models/models.dart';
-import 'package:scanner_qr/shared/config/config.dart';
+import 'package:scanner_qr/shared/shared.dart';
+
+import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 
 class DeliverListView extends StatefulWidget {
   const DeliverListView({super.key});
@@ -126,120 +128,98 @@ class _DeliverListViewState extends State<DeliverListView> {
                               //   ),
                               // );
                             },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 15),
-                              padding: const EdgeInsets.all(20),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    offset: Offset(0, 5),
-                                    blurRadius: 4,
-                                    spreadRadius: 1,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          children: adresses.direciones!.map(
-                                            (DireccionDt orderDetail) {
-                                              if (orderDetail.recibido == 1) {
-                                                return Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.label,
+                            child: CardWidget(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: adresses.direciones!.map(
+                                          (DireccionDt orderDetail) {
+                                            if (orderDetail.recibido == 1) {
+                                              return Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.label,
+                                                    color:
+                                                        orderDetail.entregado !=
+                                                                1
+                                                            ? Colors.black
+                                                            : Colors.green,
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    orderDetail.codigo ?? '',
+                                                    style: TextStyle(
                                                       color: orderDetail
                                                                   .entregado !=
                                                               1
                                                           ? Colors.black
                                                           : Colors.green,
                                                     ),
-                                                    const SizedBox(width: 10),
-                                                    Text(
-                                                      orderDetail.codigo ?? '',
-                                                      style: TextStyle(
-                                                        color: orderDetail
-                                                                    .entregado !=
-                                                                1
-                                                            ? Colors.black
-                                                            : Colors.green,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              } else {
-                                                return const SizedBox();
-                                              }
-                                            },
-                                          ).toList(),
-                                        ),
+                                                  ),
+                                                ],
+                                              );
+                                            } else {
+                                              return const SizedBox();
+                                            }
+                                          },
+                                        ).toList(),
                                       ),
-                                      const SizedBox(width: 10),
-                                      Text(adresses.correlativo ?? ''),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Icon(Icons.account_circle_outlined),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child:
-                                            Text(adresses.nombreContacto ?? ''),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Icon(Icons.pin_drop),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: Text(adresses.direccion ?? ''),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  adresses.reprogramaciones != null &&
-                                          adresses.reprogramaciones!.isNotEmpty
-                                      ? Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Icon(
-                                              Icons.warning,
-                                              color: Colors.red,
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: Text(
-                                                'Reprogramaciones: ${adresses.reprogramaciones!.length.toString()}',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.red,
-                                                ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(adresses.correlativo ?? ''),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Icon(Icons.account_circle_outlined),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child:
+                                          Text(adresses.nombreContacto ?? ''),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Icon(Icons.pin_drop),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(adresses.direccion ?? ''),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                adresses.reprogramaciones != null &&
+                                        adresses.reprogramaciones!.isNotEmpty
+                                    ? Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Icons.warning,
+                                            color: Colors.red,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(
+                                              'Reprogramaciones: ${adresses.reprogramaciones!.length.toString()}',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.red,
                                               ),
                                             ),
-                                          ],
-                                        )
-                                      : const SizedBox(),
-                                ],
-                              ),
+                                          ),
+                                        ],
+                                      )
+                                    : const SizedBox(),
+                              ],
                             ),
                           );
                         },

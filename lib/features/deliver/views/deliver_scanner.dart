@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -84,6 +82,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
           messageStatus = 'Escanee el código de barras';
         });
       } else {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(map['message']),
@@ -149,8 +148,10 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
       final map = json.decode(response.body) as Map<String, dynamic>;
 
       if (map['statusCode'] == 200) {
+        if (!context.mounted) return;
         Navigator.popAndPushNamed(context, HomeView.route);
       } else {
+        if (!context.mounted) return;
         showDialog(
           context: context,
           builder: (context) => showSimpleDialog(
@@ -181,492 +182,487 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                offset: Offset(0, 5),
-                                blurRadius: 4,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 10),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Correlativo:'),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(adress!.correlativo ?? ''),
-                                    ),
-                                  ],
-                                ),
-                                adress!.direccion != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                adress!.direccion != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Dirección:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child:
-                                                Text(adress!.direccion ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                adress!.departamento != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                adress!.departamento != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Departamento:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                                adress!.departamento ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                adress!.provincia != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                adress!.provincia != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Provincia:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child:
-                                                Text(adress!.provincia ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                adress!.distrito != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                adress!.distrito != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Distrito:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(adress!.distrito ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                adress!.referencia != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                adress!.referencia != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Referencia:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child:
-                                                Text(adress!.referencia ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                adress!.observaciones != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                adress!.observaciones != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Observaciones:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                                adress!.observaciones ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                adress!.dniRuc != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                adress!.dniRuc != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Documento:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(adress!.dniRuc ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                adress!.nombreContacto != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                adress!.nombreContacto != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Contacto:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                                adress!.nombreContacto ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                client?.nombre != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                client?.nombre != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Cliente:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                                '${client?.dni != null ? '${client?.dni} / ' : ''}${client?.nombre ?? ''}'),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                client?.dni != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                client?.dni != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('DNI Cliente:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(client?.dni ?? ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                client?.celular != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                client?.celular != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Celular del Cliente:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                                client?.celular.toString() ??
-                                                    ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                deliverAgency?.nombreAgencia != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                deliverAgency?.nombreAgencia != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Agencia:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                                deliverAgency?.nombreAgencia ??
-                                                    ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                deliverLocation?.nombreUbicacion != null
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                deliverLocation?.nombreUbicacion != null
-                                    ? Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('Destino:'),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(deliverLocation
-                                                    ?.nombreUbicacion ??
-                                                ''),
-                                          ),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                                const SizedBox(height: 10),
-                                deliverAgency?.id == 3
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: TextFormField(
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          decoration: const InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.all(10),
-                                              hintText: 'Importe',
-                                              border: OutlineInputBorder(),
-                                              prefixIcon: Icon(Icons
-                                                  .monetization_on_outlined),
-                                              fillColor: Colors.white),
-                                          onChanged: (value) => {
-                                            setState(() {
-                                              amount = int.parse(value);
-                                            })
-                                          },
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                                deliverAgency?.id == 3
-                                    ? const SizedBox(height: 10)
-                                    : const SizedBox(),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Pedidos:'),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        children: adress!.direciones!.map(
-                                          (DireccionDt orderDetail) {
-                                            if (orderDetail.recibido != 0) {
-                                              return Row(
-                                                children: [
-                                                  Text(
-                                                    orderDetail.codigo ?? '',
-                                                  ),
-                                                ],
-                                              );
-                                            }
-                                            return const SizedBox();
-                                          },
-                                        ).toList(),
+                        child: CardWidget(
+                          children: [
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Correlativo:'),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(adress!.correlativo ?? ''),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        final picker = ImagePicker();
-                                        final pickedFiles =
-                                            await picker.pickMultiImage();
-                                        if (pickedFiles.isNotEmpty) {
-                                          final List<File> compressedImages =
-                                              [];
-                                          for (var pickedFile in pickedFiles) {
+                                    ],
+                                  ),
+                                  adress!.direccion != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  adress!.direccion != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Dirección:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child:
+                                                  Text(adress!.direccion ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  adress!.departamento != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  adress!.departamento != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Departamento:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adress!.departamento ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  adress!.provincia != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  adress!.provincia != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Provincia:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child:
+                                                  Text(adress!.provincia ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  adress!.distrito != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  adress!.distrito != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Distrito:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child:
+                                                  Text(adress!.distrito ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  adress!.referencia != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  adress!.referencia != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Referencia:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adress!.referencia ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  adress!.observaciones != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  adress!.observaciones != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Observaciones:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adress!.observaciones ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  adress!.dniRuc != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  adress!.dniRuc != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Documento:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(adress!.dniRuc ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  adress!.nombreContacto != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  adress!.nombreContacto != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Contacto:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adress!.nombreContacto ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  client?.nombre != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  client?.nombre != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Cliente:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  '${client?.dni != null ? '${client?.dni} / ' : ''}${client?.nombre ?? ''}'),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  client?.dni != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  client?.dni != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('DNI Cliente:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(client?.dni ?? ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  client?.celular != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  client?.celular != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Celular del Cliente:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  client?.celular.toString() ??
+                                                      ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  deliverAgency?.nombreAgencia != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  deliverAgency?.nombreAgencia != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Agencia:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(deliverAgency
+                                                      ?.nombreAgencia ??
+                                                  ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  deliverLocation?.nombreUbicacion != null
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  deliverLocation?.nombreUbicacion != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Destino:'),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(deliverLocation
+                                                      ?.nombreUbicacion ??
+                                                  ''),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  const SizedBox(height: 10),
+                                  deliverAgency?.id == 3
+                                      ? Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: TextFormField(
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            decoration: const InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.all(10),
+                                                hintText: 'Importe',
+                                                border: OutlineInputBorder(),
+                                                prefixIcon: Icon(Icons
+                                                    .monetization_on_outlined),
+                                                fillColor: Colors.white),
+                                            onChanged: (value) => {
+                                              setState(() {
+                                                amount = int.parse(value);
+                                              })
+                                            },
+                                            keyboardType: TextInputType.number,
+                                          ),
+                                        )
+                                      : const SizedBox(),
+                                  deliverAgency?.id == 3
+                                      ? const SizedBox(height: 10)
+                                      : const SizedBox(),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Pedidos:'),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                          children: adress!.direciones!.map(
+                                            (DireccionDt orderDetail) {
+                                              if (orderDetail.recibido != 0) {
+                                                return Row(
+                                                  children: [
+                                                    Text(
+                                                      orderDetail.codigo ?? '',
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                              return const SizedBox();
+                                            },
+                                          ).toList(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          final picker = ImagePicker();
+                                          final pickedFiles =
+                                              await picker.pickMultiImage();
+                                          if (pickedFiles.isNotEmpty) {
+                                            final List<File> compressedImages =
+                                                [];
+                                            for (var pickedFile
+                                                in pickedFiles) {
+                                              var result = await compressImage(
+                                                  pickedFile);
+                                              compressedImages.add(result);
+                                            }
+                                            setState(() {
+                                              deliverPhotos = compressedImages;
+                                            });
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.blue,
+                                        ),
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.photo_library,
+                                                color: Colors.white),
+                                            SizedBox(width: 10),
+                                            Text(
+                                              'Galería',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          final picker = ImagePicker();
+                                          final pickedFile =
+                                              await picker.pickImage(
+                                                  source: ImageSource.camera);
+                                          if (pickedFile != null) {
+                                            final List<File> compressedImages =
+                                                deliverPhotos ?? [];
                                             var result =
                                                 await compressImage(pickedFile);
                                             compressedImages.add(result);
+                                            setState(() {
+                                              deliverPhotos = compressedImages;
+                                            });
                                           }
-                                          setState(() {
-                                            deliverPhotos = compressedImages;
-                                          });
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue,
-                                      ),
-                                      child: const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.photo_library,
-                                              color: Colors.white),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            'Galería',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        final picker = ImagePicker();
-                                        final pickedFile =
-                                            await picker.pickImage(
-                                                source: ImageSource.camera);
-                                        if (pickedFile != null) {
-                                          final List<File> compressedImages =
-                                              deliverPhotos ?? [];
-                                          var result =
-                                              await compressImage(pickedFile);
-                                          compressedImages.add(result);
-                                          setState(() {
-                                            deliverPhotos = compressedImages;
-                                          });
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue,
-                                      ),
-                                      child: const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.photo_camera,
-                                              color: Colors.white),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            'Cámara',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                ListView.builder(
-                                  itemCount: deliverPhotos!.length,
-                                  shrinkWrap: true,
-                                  physics: const BouncingScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Image.file(
-                                              deliverPhotos![index],
-                                              // width: 80,
-                                              height: 80,
-                                              fit: BoxFit.fitWidth,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                deliverPhotos!.removeAt(index);
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: 50),
-                                SizedBox(
-                                  height: 50,
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) {
-                                          return DeliverRejectView(
-                                            deliver: adress!,
-                                          );
                                         },
-                                      ));
-                                    },
-                                    child: const Text(
-                                      'No entregado',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  height: 50,
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                DeliverRejectView(
-                                              deliver: adress!,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.blue,
+                                        ),
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.photo_camera,
+                                                color: Colors.white),
+                                            SizedBox(width: 10),
+                                            Text(
+                                              'Cámara',
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
-                                          ));
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  ListView.builder(
+                                    itemCount: deliverPhotos!.length,
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Image.file(
+                                                deliverPhotos![index],
+                                                // width: 80,
+                                                height: 80,
+                                                fit: BoxFit.fitWidth,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  deliverPhotos!
+                                                      .removeAt(index);
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
                                     },
-                                    child: const Text(
-                                      'Reprogramar',
-                                      style: TextStyle(color: Colors.white),
+                                  ),
+                                  const SizedBox(height: 50),
+                                  SizedBox(
+                                    height: 50,
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                          builder: (context) {
+                                            return DeliverRejectView(
+                                              deliver: adress!,
+                                            );
+                                          },
+                                        ));
+                                      },
+                                      child: const Text(
+                                        'No entregado',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  height: 50,
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                    ),
-                                    onPressed: deliverPhotos!.isEmpty
-                                        ? null
-                                        : () => confirmDelivery(),
-                                    child: const Text(
-                                      'Entregado',
-                                      style: TextStyle(color: Colors.white),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blue,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DeliverRejectView(
+                                                deliver: adress!,
+                                              ),
+                                            ));
+                                      },
+                                      child: const Text(
+                                        'Reprogramar',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
                                   ),
-                                )
-                              ],
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green,
+                                      ),
+                                      onPressed: deliverPhotos!.isEmpty
+                                          ? null
+                                          : () => confirmDelivery(),
+                                      child: const Text(
+                                        'Entregado',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ],
