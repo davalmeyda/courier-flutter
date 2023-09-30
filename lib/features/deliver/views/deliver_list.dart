@@ -36,12 +36,25 @@ class _DeliverListViewState extends State<DeliverListView> {
           'Content-Type': 'application/json; charset=UTF-8',
         });
     final map = json.decode(response.body) as Map<String, dynamic>;
-    debugPrint(map.toString());
-    final direcciones = Direccion.fromJsonList(map['body'][0]);
-    setState(() {
-      receiveList = direcciones;
-      loading = false;
-    });
+    if (map['statusCode'] == 200) {
+      debugPrint(map.toString());
+      final direcciones = Direccion.fromJsonList(map['body'][0]);
+      setState(() {
+        receiveList = direcciones;
+        loading = false;
+      });
+    } else {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(map['message']),
+          duration: const Duration(milliseconds: 1000),
+        ),
+      );
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
