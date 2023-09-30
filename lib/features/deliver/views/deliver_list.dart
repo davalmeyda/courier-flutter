@@ -7,6 +7,7 @@ import 'package:scanner_qr/models/models.dart';
 import 'package:scanner_qr/shared/shared.dart';
 
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
+import 'package:scanner_qr/shared/widgets/phone_button.dart';
 
 class DeliverListView extends StatefulWidget {
   const DeliverListView({super.key});
@@ -186,29 +187,6 @@ class _DeliverListViewState extends State<DeliverListView> {
                                   ],
                                 ),
                                 const SizedBox(height: 10),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Icon(Icons.account_circle_outlined),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child:
-                                          Text(adresses.nombreContacto ?? ''),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Icon(Icons.pin_drop),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(adresses.direccion ?? ''),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
                                 adresses.reprogramaciones != null &&
                                         adresses.reprogramaciones!.isNotEmpty
                                     ? Row(
@@ -232,6 +210,47 @@ class _DeliverListViewState extends State<DeliverListView> {
                                         ],
                                       )
                                     : const SizedBox(),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Icon(Icons
+                                                  .account_circle_outlined),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                    adresses.nombreContacto ??
+                                                        ''),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Icon(Icons.pin_drop),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                    adresses.direccion ?? ''),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    PhoneButtonWidget(
+                                      phone: adresses.celulares ?? '',
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           );

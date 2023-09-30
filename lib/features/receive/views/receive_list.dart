@@ -7,6 +7,7 @@ import 'package:scanner_qr/models/models.dart';
 import 'package:scanner_qr/shared/shared.dart';
 
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
+import 'package:scanner_qr/shared/widgets/phone_button.dart';
 
 class ReceiveListView extends StatefulWidget {
   const ReceiveListView({super.key});
@@ -193,7 +194,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                 ),
                                 const SizedBox(height: 10),
                                 Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const Icon(Icons.pin_drop),
                                     const SizedBox(width: 10),
