@@ -3,17 +3,19 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_beep/flutter_beep.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+
 import 'package:qr_mobile_vision/qr_camera.dart';
-import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
+import 'package:flutter_beep/flutter_beep.dart';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/models/models.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:scanner_qr/shared/config/config.dart';
-import 'package:scanner_qr/shared/utils/alert.dart';
-import 'package:scanner_qr/shared/utils/compress_image.dart';
+import 'package:scanner_qr/shared/shared.dart';
+
+import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 
 class DeliverScannerView extends StatefulWidget {
   const DeliverScannerView({super.key});
@@ -603,10 +605,16 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                       backgroundColor: Colors.red,
                                     ),
                                     onPressed: () {
-                                      debugPrint(adress?.correlativo);
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return DeliverRejectView(
+                                            deliver: adress!,
+                                          );
+                                        },
+                                      ));
                                     },
                                     child: const Text(
-                                      'Rechazar',
+                                      'No entregado',
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
@@ -626,7 +634,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                DeliverRescheduleView(
+                                                DeliverRejectView(
                                               deliver: adress!,
                                             ),
                                           ));
@@ -651,7 +659,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                                         ? null
                                         : () => confirmDelivery(),
                                     child: const Text(
-                                      'Confirmar',
+                                      'Entregado',
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
