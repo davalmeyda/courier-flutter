@@ -63,7 +63,7 @@ class _DeliverListViewState extends State<DeliverListView> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
           child: Row(
             children: [
               Expanded(
@@ -75,28 +75,9 @@ class _DeliverListViewState extends State<DeliverListView> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                       fillColor: Colors.white),
-                  onChanged: (value) =>
-                      getAllPendingReceives(value, authBloc2.user.id.toString()),
+                  onChanged: (value) => getAllPendingReceives(
+                      value, authBloc2.user.id.toString()),
                 ),
-              ),
-              const SizedBox(width: 10),
-              MaterialButton(
-                height: 50,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                disabledColor: Colors.grey,
-                elevation: 0,
-                color: Colors.blue,
-                child: const Center(
-                  child: Icon(
-                    Icons.document_scanner,
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, DeliverScannerView.route);
-                },
               ),
             ],
           ),
