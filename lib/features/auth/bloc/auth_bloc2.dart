@@ -1,19 +1,23 @@
+import 'package:ojo_courier/shared/config/config.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:ojo_courier/models/user.entity.dart';
 
 class AuthBloc2 {
-  final BehaviorSubject<User> _user = BehaviorSubject<User>();
+  final BehaviorSubject<User?> _user = BehaviorSubject<User?>();
 
   AuthBloc2() {
-    _user.add(User());
+    LocalPreferences().getUser().then((value) {
+      _user.add(value);
+    });
   }
 
-  Stream<User> get userStream => _user.stream;
+  Stream<dynamic> get userStream => _user.stream;
 
-  User get user => _user.value;
+  User? get user => _user.hasValue ? _user.value : null;
 
-  void setUser(User user) {
+  Future setUser(User user) async {
     _user.add(user);
+    return await LocalPreferences().setUser(user);
   }
 
   void dispose() {

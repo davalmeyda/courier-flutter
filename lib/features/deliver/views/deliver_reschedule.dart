@@ -41,7 +41,7 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
 
     final response = await http.put(
       Uri.parse(
-          '${EnvironmentVariables.baseUrl}pedido/reprogramar/${deliver!.id}?idUser=${authBloc2.user.id}&motivo=$reason'),
+          '${EnvironmentVariables.baseUrl}pedido/reprogramar/${deliver!.id}?idUser=${authBloc2.user!.id}&motivo=$reason'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -53,7 +53,7 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
         final request = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              '${EnvironmentVariables.baseUrl}pedido/imagenReprogramacion/${deliver!.id}?user_id=${authBloc2.user.id}&reprogramacion_id=$idReschedule'),
+              '${EnvironmentVariables.baseUrl}pedido/imagenReprogramacion/${deliver!.id}?user_id=${authBloc2.user!.id}&reprogramacion_id=$idReschedule'),
         );
         request.files.add(
           http.MultipartFile(

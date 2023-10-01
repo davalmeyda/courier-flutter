@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:ojo_courier/features/features.dart';
 
 class AppRoutes {
-  static const String initialRoute = LoginView.route;
   static final mainNavigatorKey = GlobalKey<NavigatorState>();
+
+  static const String loginRoute = LoginView.route;
+  static const String homeRoute = HomeView.route;
+
   static Map<String, WidgetBuilder> get routes => {
         HomeView.route: (_) => const HomeView(),
         ReceiveListView.route: (_) => const ReceiveListView(),

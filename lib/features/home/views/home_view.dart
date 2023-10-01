@@ -16,7 +16,9 @@ class HomeView extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
+            onPressed: () async {
+              await LocalPreferences().clear();
+              if (!context.mounted) return;
               Navigator.pushNamedAndRemoveUntil(
                   context, LoginView.route, (route) => false);
             },

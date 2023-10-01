@@ -41,7 +41,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
       },
       body: jsonEncode(<String, dynamic>{
         'codigos': receiveListToConfirm!,
-        'idUser': authBloc2.user.id,
+        'idUser': authBloc2.user!.id,
       }),
     );
     final map = json.decode(response.body) as Map<String, dynamic>;
@@ -81,7 +81,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
           now.difference(currentBackPressTime) > const Duration(seconds: 3)) {
         final response = await http.get(
           Uri.parse(
-              '${EnvironmentVariables.baseUrl}pedido/consultaCodigo/$code?idUser=${authBloc2.user.id}'),
+              '${EnvironmentVariables.baseUrl}pedido/consultaCodigo/$code?idUser=${authBloc2.user!.id}'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
