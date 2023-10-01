@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
+import 'package:scanner_qr/models/user.entity.dart';
 import 'package:scanner_qr/shared/shared.dart';
 
 class SignInFormWidget extends StatefulWidget {
@@ -37,7 +38,8 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
     final map = json.decode(response.body) as Map<String, dynamic>;
     if (!context.mounted) return;
     if (map['statusCode'] == 202) {
-      authBloc2.setUser(map['body']['id']);
+      final user = User.fromJson(map['body']);
+      authBloc2.setUser(user);
       _navigateToHome(context);
     } else {
       _showErrorDialog(map['message'], context);
