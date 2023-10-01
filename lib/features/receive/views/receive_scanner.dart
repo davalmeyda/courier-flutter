@@ -8,6 +8,7 @@ import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/shared/config/config.dart';
 import 'package:scanner_qr/shared/utils/alert.dart';
 import 'package:flutter_beep/flutter_beep.dart';
+import 'package:scanner_qr/shared/widgets/validaciones.dart';
 
 class ReceiveScannerView extends StatefulWidget {
   const ReceiveScannerView({super.key});
@@ -74,22 +75,22 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
 
   // FUNCION QUE AGREGA A LA LISTA
   void agregarLista(String? code) async {
-    DateTime now = DateTime.now();
-    if (currentBackPressTime == null ||
-        now.difference(currentBackPressTime) > const Duration(seconds: 3)) {
-      final response = await http.get(
-        Uri.parse(
-            '${EnvironmentVariables.baseUrl}pedido/consultaCodigo/$code?idUser=${authBloc2.user.id}'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-      final map = json.decode(response.body) as Map<String, dynamic>;
-      FlutterBeep.beep();
+    if (code!.isNotEmpty && validarCodigoEscaneado(code)) {
+      DateTime now = DateTime.now();
+      if (currentBackPressTime == null ||
+          now.difference(currentBackPressTime) > const Duration(seconds: 3)) {
+        final response = await http.get(
+          Uri.parse(
+              '${EnvironmentVariables.baseUrl}pedido/consultaCodigo/$code?idUser=${authBloc2.user.id}'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        );
+        final map = json.decode(response.body) as Map<String, dynamic>;
+        FlutterBeep.beep();
 
-      currentBackPressTime = now;
-      if (map['statusCode'] == 200) {
-        if (code!.isNotEmpty) {
+        currentBackPressTime = now;
+        if (map['statusCode'] == 200) {
           if (receiveListToConfirm!.isNotEmpty &&
               receiveListToConfirm!.any((element) => code == element)) {
             return;
@@ -97,15 +98,15 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
           setState(() {
             receiveListToConfirm!.add(code);
           });
+        } else {
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(map['message']),
+              duration: const Duration(milliseconds: 1000),
+            ),
+          );
         }
-      } else {
-        if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(map['message']),
-            duration: const Duration(milliseconds: 1000),
-          ),
-        );
       }
     }
   }
