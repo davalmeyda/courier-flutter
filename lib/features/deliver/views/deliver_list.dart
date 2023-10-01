@@ -236,6 +236,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                                             ),
                                           ],
                                         ),
+                                  const SizedBox(height: 20),
                                   PhoneButtonWidget(
                                     phone: adresses.celulares ?? '',
                                   ),
