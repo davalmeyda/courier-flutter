@@ -23,6 +23,9 @@ class DeliverScannerView extends StatefulWidget {
 }
 
 class _DeliverScannerViewState extends State<DeliverScannerView> {
+  final codeValueController = TextEditingController();
+  String? codeValue;
+  bool isKeyboard = false;
   Direccion? adress;
   Cliente? client;
   Ubicacion? deliverLocation;
@@ -174,6 +177,17 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Despachar'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  isKeyboard = !isKeyboard;
+                });
+              },
+              color: Colors.blue,
+              icon: Icon(isKeyboard ? Icons.camera_alt : Icons.keyboard),
+            ),
+          ],
         ),
         body: Container(
           child: adress != null
@@ -670,38 +684,81 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                     ),
                   ),
                 )
-              : Column(
-                  children: [
-                    Container(
-                      height: 250,
-                      width: double.infinity,
-                      color: Colors.black,
-                      child: QrCamera(
-                        onError: (context, error) => Text(
-                          error.toString(),
-                          style: const TextStyle(color: Colors.red),
+              : isKeyboard
+                  ? Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: TextField(
+                            autofocus: true,
+                            controller: codeValueController,
+                            decoration: const InputDecoration(
+                              hintText: 'Ingrese el código',
+                              border: OutlineInputBorder(),
+                            ),
+                            onChanged: (value) => setState(() {
+                              codeValue = value;
+                            }),
+                          ),
                         ),
-                        cameraDirection: CameraDirection.BACK,
-                        qrCodeCallback: (code) async {
-                          if (code!.isNotEmpty) {
-                            getDeliverDetails(code);
-                          }
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          messageStatus,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: SizedBox(
+                            height: 50,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                              ),
+                              onPressed:
+                                  codeValue != null && codeValue!.length < 2
+                                      ? null
+                                      : () {
+                                          getDeliverDetails(codeValue);
+                                          codeValueController.clear();
+                                        },
+                              child: const Text(
+                                'Buscar código',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 20)
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Container(
+                          height: 250,
+                          width: double.infinity,
+                          color: Colors.black,
+                          child: QrCamera(
+                            onError: (context, error) => Text(
+                              error.toString(),
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                            cameraDirection: CameraDirection.BACK,
+                            qrCodeCallback: (code) async {
+                              if (code!.isNotEmpty) {
+                                getDeliverDetails(code);
+                              }
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              messageStatus,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
         ));
   }
 }
