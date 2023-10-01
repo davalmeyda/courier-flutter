@@ -126,7 +126,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
         final request = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${order.pedido?.codigo}?user_id=${authBloc2.userId}&importe=$amount'),
+              '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${order.pedido?.codigo}?user_id=${authBloc2.user.id}&importe=$amount'),
         );
         request.files.add(
           http.MultipartFile(
@@ -140,7 +140,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
       }
       final response = await http.put(
         Uri.parse(
-            '${EnvironmentVariables.baseUrl}pedido/entregar/${order.pedido?.codigo}?idUser=${authBloc2.userId}&importe=$amount&forma_pago=$paymentType'),
+            '${EnvironmentVariables.baseUrl}pedido/entregar/${order.pedido?.codigo}?idUser=${authBloc2.user.id}&importe=$amount&forma_pago=$paymentType'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

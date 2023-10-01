@@ -21,7 +21,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
   @override
   void initState() {
     super.initState();
-    getAllPendingReceives('', authBloc2.userId.toString());
+    getAllPendingReceives('', authBloc2.user.id.toString());
   }
 
   Future<void> getAllPendingReceives(String searchText, String userId) async {
@@ -74,7 +74,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                       prefixIcon: Icon(Icons.search),
                       fillColor: Colors.white),
                   onChanged: (value) =>
-                      getAllPendingReceives(value, authBloc2.userId.toString()),
+                      getAllPendingReceives(value, authBloc2.user.id.toString()),
                 ),
               ),
             ],
@@ -101,7 +101,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                     child: RefreshIndicator(
                       triggerMode: RefreshIndicatorTriggerMode.anywhere,
                       onRefresh: () async {
-                        getAllPendingReceives('', authBloc2.userId.toString());
+                        getAllPendingReceives('', authBloc2.user.id.toString());
                       },
                       child: ListView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -229,7 +229,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                           ElevatedButton(
                             onPressed: () {
                               getAllPendingReceives(
-                                  '', authBloc2.userId.toString());
+                                  '', authBloc2.user.id.toString());
                             },
                             child: const Icon(Icons.replay),
                           ),

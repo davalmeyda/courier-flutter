@@ -1,22 +1,23 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:scanner_qr/models/user.entity.dart';
 
 class AuthBloc2 {
-  final BehaviorSubject<int?> _userId = BehaviorSubject<int>();
+  final BehaviorSubject<User> _user = BehaviorSubject<User>();
 
   AuthBloc2() {
-    _userId.add(59);
+    _user.add(User());
   }
 
-  Stream<dynamic> get userStream => _userId.stream;
+  Stream<User> get userStream => _user.stream;
 
-  dynamic get userId => _userId.hasValue ? _userId.value : null;
+  User get user => _user.value;
 
-  void setUser(int id) {
-    _userId.add(id);
+  void setUser(User user) {
+    _user.add(user);
   }
 
   void dispose() {
-    _userId.close();
+    _user.close();
   }
 }
 
