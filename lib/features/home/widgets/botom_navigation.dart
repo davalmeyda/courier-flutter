@@ -12,8 +12,52 @@ class BottomNavigationWidget extends StatefulWidget {
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<AuthBloc>().state;
-    return NavigationBar(
+    return BottomAppBar(
+      shape: const CircularNotchedRectangle(),
+      color: Colors.blue,
+      child: IconTheme(
+        data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+        child: Row(
+          children: <Widget>[
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return IconButton(
+                  tooltip: 'Recepción',
+                  enableFeedback: true,
+                  icon: const Icon(Icons.trolley),
+                  onPressed: () {
+                    context.read<AuthBloc>().add(const ChangeIndex(0));
+                  },
+                );
+              },
+            ),
+            const Spacer(),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state.selectedIndex == 1) {
+                  return IconButton(
+                    tooltip: 'Despacho',
+                    icon: const Icon(Icons.local_shipping),
+                    onPressed: () {
+                      context.read<AuthBloc>().add(const ChangeIndex(1));
+                    },
+                  );
+                } else {
+                  return IconButton(
+                    tooltip: 'Despacho',
+                    icon: const Icon(Icons.local_shipping),
+                    onPressed: () {
+                      context.read<AuthBloc>().add(const ChangeIndex(1));
+                    },
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+    /*return NavigationBar(
       onDestinationSelected: (value) =>
           context.read<AuthBloc>().add(ChangeIndex(value)),
       selectedIndex: state.selectedIndex,
@@ -31,7 +75,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           label: 'Despacho',
         ),
       ],
-    );
+    );*/
     // return BottomNavigationBar(
     //   type: BottomNavigationBarType.shifting,
     //   elevation: 0,

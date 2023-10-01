@@ -2,27 +2,27 @@ import 'package:rxdart/rxdart.dart';
 import 'package:scanner_qr/shared/config/config.dart';
 
 class AuthBloc2 {
-  final BehaviorSubject<dynamic> _user = BehaviorSubject<dynamic>();
+  final BehaviorSubject<int> _userId = BehaviorSubject<int>();
 
   AuthBloc2() {
-    LocalPreferences().getString('user').then((value) {
+    LocalPreferences().getString('idLogged').then((value) {
       if (value != null) {
-        _user.add(value);
+        _userId.add(int.parse(value));
       }
     });
   }
 
-  Stream<dynamic> get userStram => _user.stream;
+  Stream<dynamic> get userStream => _userId.stream;
 
-  dynamic get user => _user.hasValue ? _user.value : null;
+  dynamic get userId => _userId.hasValue ? _userId.value : null;
 
-  void setUser(dynamic user) {
-    _user.add(user);
-    LocalPreferences().setString('user', user);
+  void setUser(int id) {
+    _userId.add(id);
+    LocalPreferences().setString('idLogged', id.toString());
   }
 
   void dispose() {
-    _user.close();
+    _userId.close();
   }
 }
 

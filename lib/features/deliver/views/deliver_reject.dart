@@ -44,7 +44,7 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
 
     final response = await http.put(
       Uri.parse(
-          '${EnvironmentVariables.baseUrl}pedido/rechazar/${deliver!.id}?idUser=${authBloc2.user['id']}&motivo=$reason'),
+          '${EnvironmentVariables.baseUrl}pedido/rechazar/${deliver!.id}?idUser=${authBloc2.userId}&motivo=$reason'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -56,7 +56,7 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
         final request = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              '${EnvironmentVariables.baseUrl}pedido/imagenRechazar/${deliver!.id}?user_id=${authBloc2.user['id']}&rechazado_id=$idRejected'),
+              '${EnvironmentVariables.baseUrl}pedido/imagenRechazar/${deliver!.id}?user_id=${authBloc2.userId}&rechazado_id=$idRejected'),
         );
         request.files.add(
           http.MultipartFile(

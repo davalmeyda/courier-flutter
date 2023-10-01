@@ -8,12 +8,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Verifica si hay un usuario almacenado localmente
-  final username = await LocalPreferences().getString('user');
+  final userId = await LocalPreferences().getString('idLogged');
 
   // Crea el AuthBloc2 y establece el usuario si está disponible
   final authBloc2 = AuthBloc2();
-  if (username != null) {
-    authBloc2.setUser(username);
+  if (userId != null) {
+    authBloc2.setUser(int.parse(userId));
   }
 
   runApp(MultiRepositoryProvider(
@@ -34,14 +34,16 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key, required this.authBloc2}) : super(key: key);
 
   String _determineInitialRoute() {
-    return authBloc2.user != null ? AppRoutes.homeRoute : AppRoutes.loginRoute;
+    return authBloc2.userId != null
+        ? AppRoutes.homeRoute
+        : AppRoutes.loginRoute;
   }
 
   @override
   Widget build(BuildContext context) {
-    LocalPreferences().getString('user').then((value) {
+    LocalPreferences().getString('idLogged').then((value) {
       if (value != null) {
-        authBloc2.setUser(value);
+        authBloc2.setUser(int.parse(value));
       }
     });
     final navigatorKey = AppRoutes.mainNavigatorKey;
