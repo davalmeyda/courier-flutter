@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/models/models.dart';
 import 'package:scanner_qr/shared/shared.dart';
 

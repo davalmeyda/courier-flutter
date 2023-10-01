@@ -21,59 +21,73 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           children: <Widget>[
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
-                if (state.selectedIndex == 0) {
-                  return IconButton(
-                    tooltip: 'Recepción',
-                    enableFeedback: true,
-                    icon: const Icon(
-                      Icons.trolley,
-                      color: Colors.blue,
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                    ),
-                    onPressed: () {
-                      context.read<AuthBloc>().add(const ChangeIndex(0));
-                    },
-                  );
-                } else {
-                  return IconButton(
-                    tooltip: 'Recepción',
-                    enableFeedback: true,
-                    icon: const Icon(Icons.trolley),
-                    onPressed: () {
-                      context.read<AuthBloc>().add(const ChangeIndex(0));
-                    },
-                  );
-                }
+                return IconButton(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  tooltip: 'Recepción',
+                  enableFeedback: true,
+                  icon: Row(
+                    children: [
+                      Icon(
+                        Icons.trolley,
+                        color: state.selectedIndex == 0
+                            ? Colors.blue
+                            : Colors.white,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        'Recepción',
+                        style: TextStyle(
+                            color: state.selectedIndex == 0
+                                ? Colors.blue
+                                : Colors.white),
+                      ),
+                    ],
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor: state.selectedIndex == 0
+                        ? MaterialStateProperty.all(Colors.white)
+                        : MaterialStateProperty.all(Colors.blue),
+                  ),
+                  onPressed: () {
+                    context.read<AuthBloc>().add(const ChangeIndex(0));
+                  },
+                );
               },
             ),
             const Spacer(),
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
-                if (state.selectedIndex == 1) {
-                  return IconButton(
-                    tooltip: 'Despacho',
-                    icon: const Icon(
-                      Icons.local_shipping,
-                      color: Colors.blue,
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                    ),
-                    onPressed: () {
-                      context.read<AuthBloc>().add(const ChangeIndex(1));
-                    },
-                  );
-                } else {
-                  return IconButton(
-                    tooltip: 'Despacho',
-                    icon: const Icon(Icons.local_shipping),
-                    onPressed: () {
-                      context.read<AuthBloc>().add(const ChangeIndex(1));
-                    },
-                  );
-                }
+                return IconButton(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  tooltip: 'Despacho',
+                  enableFeedback: true,
+                  icon: Row(
+                    children: [
+                      Text(
+                        'Despacho',
+                        style: TextStyle(
+                            color: state.selectedIndex == 1
+                                ? Colors.blue
+                                : Colors.white),
+                      ),
+                      const SizedBox(width: 10),
+                      Icon(
+                        Icons.local_shipping,
+                        color: state.selectedIndex == 1
+                            ? Colors.blue
+                            : Colors.white,
+                      ),
+                    ],
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor: state.selectedIndex == 1
+                        ? MaterialStateProperty.all(Colors.white)
+                        : MaterialStateProperty.all(Colors.blue),
+                  ),
+                  onPressed: () {
+                    context.read<AuthBloc>().add(const ChangeIndex(1));
+                  },
+                );
               },
             ),
           ],

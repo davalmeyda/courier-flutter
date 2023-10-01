@@ -4,7 +4,7 @@ class AuthBloc2 {
   final BehaviorSubject<int?> _userId = BehaviorSubject<int>();
 
   AuthBloc2() {
-    _userId.add(null);
+    _userId.add(59);
   }
 
   Stream<dynamic> get userStream => _userId.stream;
