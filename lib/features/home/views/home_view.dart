@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ojo_courier/features/auth/bloc/auth_bloc.dart';
 import 'package:ojo_courier/features/features.dart';
+import 'package:ojo_courier/shared/shared.dart';
 
 class HomeView extends StatelessWidget {
   static const String route = 'HomeView';
@@ -38,7 +39,7 @@ class HomeView extends StatelessWidget {
         builder: (context, state) {
           if (state.selectedIndex == 1) {
             return FloatingActionButton(
-              backgroundColor: Colors.blue,
+              backgroundColor: CustomColors.primary,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(100)),
               ),
@@ -53,7 +54,7 @@ class HomeView extends StatelessWidget {
             );
           }
           return FloatingActionButton(
-            backgroundColor: Colors.blue,
+            backgroundColor: CustomColors.primary,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(100)),
             ),

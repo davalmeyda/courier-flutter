@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ojo_courier/features/auth/bloc/auth_bloc.dart';
+import 'package:ojo_courier/shared/shared.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({super.key});
@@ -14,7 +15,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   Widget build(BuildContext context) {
     return BottomAppBar(
       shape: const CircularNotchedRectangle(),
-      color: Colors.blue,
+      color: CustomColors.primary,
       child: IconTheme(
         data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
         child: Row(
@@ -30,7 +31,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                       Icon(
                         Icons.trolley,
                         color: state.selectedIndex == 0
-                            ? Colors.blue
+                            ? CustomColors.primary
                             : Colors.white,
                       ),
                       const SizedBox(width: 10),
@@ -38,7 +39,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                         'Recepción',
                         style: TextStyle(
                             color: state.selectedIndex == 0
-                                ? Colors.blue
+                                ? CustomColors.primary
                                 : Colors.white),
                       ),
                     ],
@@ -46,7 +47,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   style: ButtonStyle(
                     backgroundColor: state.selectedIndex == 0
                         ? MaterialStateProperty.all(Colors.white)
-                        : MaterialStateProperty.all(Colors.blue),
+                        : MaterialStateProperty.all(CustomColors.primary),
                   ),
                   onPressed: () {
                     context.read<AuthBloc>().add(const ChangeIndex(0));
@@ -67,14 +68,14 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                         'Despacho',
                         style: TextStyle(
                             color: state.selectedIndex == 1
-                                ? Colors.blue
+                                ? CustomColors.primary
                                 : Colors.white),
                       ),
                       const SizedBox(width: 10),
                       Icon(
                         Icons.local_shipping,
                         color: state.selectedIndex == 1
-                            ? Colors.blue
+                            ? CustomColors.primary
                             : Colors.white,
                       ),
                     ],
@@ -82,7 +83,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   style: ButtonStyle(
                     backgroundColor: state.selectedIndex == 1
                         ? MaterialStateProperty.all(Colors.white)
-                        : MaterialStateProperty.all(Colors.blue),
+                        : MaterialStateProperty.all(CustomColors.primary),
                   ),
                   onPressed: () {
                     context.read<AuthBloc>().add(const ChangeIndex(1));

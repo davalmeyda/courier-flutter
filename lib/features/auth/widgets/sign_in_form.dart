@@ -70,8 +70,14 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('Bienvenido'),
-        const SizedBox(height: 20),
+        const Text(
+          'Bienvenido !',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 50),
         TextField(
           controller: usuarioController,
           decoration: const InputDecoration(

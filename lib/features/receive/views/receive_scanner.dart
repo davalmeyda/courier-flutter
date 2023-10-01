@@ -127,7 +127,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.blue),
+                  backgroundColor: MaterialStateProperty.all(CustomColors.primary),
                 ),
                 color: Colors.white,
                 icon: Icon(isKeyboard ? Icons.camera_alt : Icons.keyboard),
@@ -171,7 +171,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
+                              backgroundColor: CustomColors.primary,
                             ),
                             onPressed:
                                 codeValue != null && codeValue!.length < 2

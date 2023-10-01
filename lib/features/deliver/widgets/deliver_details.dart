@@ -84,7 +84,7 @@ class _DeliverDetailsState extends State<DeliverDetails> {
 
       if (map['statusCode'] == 200) {
         if (!context.mounted) return;
-        Navigator.popAndPushNamed(context, HomeView.route);
+        Navigator.pop(context, HomeView.route);
       } else {
         if (!context.mounted) return;
         showDialog(
@@ -415,7 +415,7 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: CustomColors.primary,
                       ),
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -445,7 +445,7 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: CustomColors.primary,
                       ),
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,

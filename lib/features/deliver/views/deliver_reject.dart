@@ -69,7 +69,13 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
         await request.send();
       }
       if (!context.mounted) return;
-      Navigator.popAndPushNamed(context, HomeView.route);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeView(),
+        ),
+        (route) => false,
+      );
     } else {
       if (!context.mounted) return;
       showDialog(
@@ -168,7 +174,7 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: CustomColors.primary,
                           ),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -198,7 +204,7 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: CustomColors.primary,
                           ),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
