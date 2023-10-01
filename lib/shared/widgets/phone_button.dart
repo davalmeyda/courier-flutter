@@ -28,7 +28,13 @@ class PhoneButtonWidget extends StatelessWidget {
         onPressed: () {
           _launchPhone(context);
         },
-        child: const Text('Llamar'),
+        
+        child: Row(
+          children: [
+            const Icon(Icons.phone),
+            Text(phone),
+          ],
+        ),
       ),
     );
   }

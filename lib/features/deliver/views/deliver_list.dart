@@ -195,64 +195,49 @@ class _DeliverListViewState extends State<DeliverListView> {
                                       : const SizedBox(),
                                   const SizedBox(height: 10),
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
+                                      const Icon(Icons.account_circle_outlined),
+                                      const SizedBox(width: 10),
                                       Expanded(
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Icon(Icons
-                                                    .account_circle_outlined),
-                                                const SizedBox(width: 10),
-                                                Expanded(
-                                                  child: Text(
-                                                      adresses.nombreContacto ??
-                                                          ''),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Icon(Icons.pin_drop),
-                                                const SizedBox(width: 10),
-                                                Expanded(
-                                                  child: Text(
-                                                      adresses.direccion ?? ''),
-                                                ),
-                                              ],
-                                            ),
-                                            adresses.empresaTransporte == null
-                                                ? const SizedBox()
-                                                : const SizedBox(height: 10),
-                                            adresses.empresaTransporte == null
-                                                ? const SizedBox()
-                                                : Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      const Icon(Icons
-                                                          .business_outlined),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
-                                                        child: Text(adresses
-                                                                .empresaTransporte ??
-                                                            ''),
-                                                      ),
-                                                    ],
-                                                  ),
-                                          ],
-                                        ),
-                                      ),
-                                      PhoneButtonWidget(
-                                        phone: adresses.celulares ?? '',
+                                        child:
+                                            Text(adresses.nombreContacto ?? ''),
                                       ),
                                     ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.pin_drop),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(adresses.direccion ?? ''),
+                                      ),
+                                    ],
+                                  ),
+                                  adresses.empresaTransporte == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.empresaTransporte == null
+                                      ? const SizedBox()
+                                      : Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.business_outlined),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adresses.empresaTransporte ??
+                                                      ''),
+                                            ),
+                                          ],
+                                        ),
+                                  PhoneButtonWidget(
+                                    phone: adresses.celulares ?? '',
                                   ),
                                 ],
                               ),
