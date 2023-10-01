@@ -271,7 +271,8 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                     ),
                   )
                 : isKeyboard
-                    ? Expanded(
+                    ? const SizedBox()
+                    : Expanded(
                         child: Container(
                           padding: const EdgeInsets.all(20),
                           child: const Text(
@@ -281,8 +282,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ),
-                      )
-                    : const SizedBox(),
+                      ),
           ],
         ));
   }
