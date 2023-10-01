@@ -21,14 +21,31 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           children: <Widget>[
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
-                return IconButton(
-                  tooltip: 'Recepción',
-                  enableFeedback: true,
-                  icon: const Icon(Icons.trolley),
-                  onPressed: () {
-                    context.read<AuthBloc>().add(const ChangeIndex(0));
-                  },
-                );
+                if (state.selectedIndex == 0) {
+                  return IconButton(
+                    tooltip: 'Recepción',
+                    enableFeedback: true,
+                    icon: const Icon(
+                      Icons.trolley,
+                      color: Colors.blue,
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                    ),
+                    onPressed: () {
+                      context.read<AuthBloc>().add(const ChangeIndex(0));
+                    },
+                  );
+                } else {
+                  return IconButton(
+                    tooltip: 'Recepción',
+                    enableFeedback: true,
+                    icon: const Icon(Icons.trolley),
+                    onPressed: () {
+                      context.read<AuthBloc>().add(const ChangeIndex(0));
+                    },
+                  );
+                }
               },
             ),
             const Spacer(),
@@ -37,7 +54,13 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                 if (state.selectedIndex == 1) {
                   return IconButton(
                     tooltip: 'Despacho',
-                    icon: const Icon(Icons.local_shipping),
+                    icon: const Icon(
+                      Icons.local_shipping,
+                      color: Colors.blue,
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                    ),
                     onPressed: () {
                       context.read<AuthBloc>().add(const ChangeIndex(1));
                     },
@@ -57,42 +80,5 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
         ),
       ),
     );
-    /*return NavigationBar(
-      onDestinationSelected: (value) =>
-          context.read<AuthBloc>().add(ChangeIndex(value)),
-      selectedIndex: state.selectedIndex,
-      indicatorColor: Colors.white,
-      backgroundColor: Colors.blue,
-      labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-      elevation: 0,
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.trolley),
-          label: 'Recepción',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.local_shipping),
-          label: 'Despacho',
-        ),
-      ],
-    );*/
-    // return BottomNavigationBar(
-    //   type: BottomNavigationBarType.shifting,
-    //   elevation: 0,
-    //   currentIndex: state.selectedIndex,
-    //   onTap: (value) => context.read<AuthBloc>().add(ChangeIndex(value)),
-    //   items: const [
-    //     BottomNavigationBarItem(
-    //       icon: Icon(Icons.trolley),
-    //       label: 'Recepción',
-    //       backgroundColor: Colors.blue,
-    //     ),
-    //     BottomNavigationBarItem(
-    //       icon: Icon(Icons.local_shipping),
-    //       label: 'Despacho',
-    //       backgroundColor: Colors.blue,
-    //     ),
-    //   ],
-    // );
   }
 }

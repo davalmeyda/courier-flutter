@@ -87,7 +87,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(map['message'] + ': $deliverCode'),
-            duration: const Duration(milliseconds: 1000),
+            duration: const Duration(milliseconds: 1500),
           ),
         );
       }
