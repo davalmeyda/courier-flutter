@@ -4,13 +4,9 @@ class Cliente {
   String? nombre;
   String? dni;
   int? celular;
-  DateTime? createdAt;
-  DateTime? updatedAt;
 
   Cliente({
     required this.id,
-    this.createdAt,
-    this.updatedAt,
     this.correlativo,
     this.nombre,
     this.dni,
@@ -23,8 +19,6 @@ class Cliente {
         nombre: json["nombre"],
         dni: json["dni"],
         celular: json["celular"],
-        createdAt: DateTime.parse(json["created_at"] ?? ''),
-        updatedAt: DateTime.parse(json["updated_at"] ?? ''),
       );
 
   static List<Cliente> fromJsonList(List<dynamic> jsonList) =>

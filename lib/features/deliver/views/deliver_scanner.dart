@@ -677,6 +677,10 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                       width: double.infinity,
                       color: Colors.black,
                       child: QrCamera(
+                        onError: (context, error) => Text(
+                          error.toString(),
+                          style: const TextStyle(color: Colors.red),
+                        ),
                         cameraDirection: CameraDirection.BACK,
                         qrCodeCallback: (code) async {
                           if (code!.isNotEmpty) {
