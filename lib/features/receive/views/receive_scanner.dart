@@ -6,6 +6,7 @@ import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
 import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/shared/config/config.dart';
+import 'package:scanner_qr/shared/shared.dart';
 import 'package:scanner_qr/shared/utils/alert.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:scanner_qr/shared/widgets/validaciones.dart';
@@ -192,19 +193,7 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                       const SizedBox(height: 20)
                     ],
                   )
-                : Container(
-                    height: 250,
-                    width: double.infinity,
-                    color: Colors.black,
-                    child: QrCamera(
-                      onError: (context, error) => Text(
-                        error.toString(),
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                      cameraDirection: CameraDirection.BACK,
-                      qrCodeCallback: agregarLista,
-                    ),
-                  ),
+                : CameraScannerWidget(callBack: agregarLista),
             receiveListToConfirm!.isNotEmpty
                 ? Expanded(
                     child: ListView.builder(
