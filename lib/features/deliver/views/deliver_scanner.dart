@@ -7,6 +7,7 @@ import 'package:flutter_beep/flutter_beep.dart';
 import 'package:scanner_qr/features/deliver/views/deliver_details.dart';
 import 'package:scanner_qr/models/models.dart';
 import 'package:scanner_qr/shared/shared.dart';
+import 'package:scanner_qr/shared/widgets/validaciones.dart';
 
 class DeliverScannerView extends StatefulWidget {
   const DeliverScannerView({super.key});
@@ -126,7 +127,7 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                       ),
                       cameraDirection: CameraDirection.BACK,
                       qrCodeCallback: (code) async {
-                        if (code!.isNotEmpty) {
+                        if (code!.isNotEmpty && validarCodigoEscaneado(code)) {
                           getDeliverDetails(code);
                         }
                       },
