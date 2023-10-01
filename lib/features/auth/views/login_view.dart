@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scanner_qr/features/auth/auth.dart';
+import 'package:ojo_courier/features/auth/auth.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

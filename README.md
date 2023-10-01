@@ -1,4 +1,4 @@
-# scanner_qr
+# ojo_courier
 
 A new Flutter project.
 

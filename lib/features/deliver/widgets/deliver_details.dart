@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
-import 'package:scanner_qr/features/features.dart';
-import 'package:scanner_qr/models/models.dart';
-import 'package:scanner_qr/shared/shared.dart';
+import 'package:ojo_courier/features/auth/bloc/auth_bloc2.dart';
+import 'package:ojo_courier/features/features.dart';
+import 'package:ojo_courier/models/models.dart';
+import 'package:ojo_courier/shared/shared.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 

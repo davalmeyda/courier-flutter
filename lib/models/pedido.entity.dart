@@ -1,4 +1,4 @@
-import 'package:scanner_qr/models/direccion_detalle.dart';
+import 'package:ojo_courier/models/direccion_detalle.dart';
 
 class Pedido {
   int id;

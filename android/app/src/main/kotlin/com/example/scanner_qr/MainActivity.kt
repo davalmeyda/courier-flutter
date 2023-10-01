@@ -1,4 +1,4 @@
-package com.example.scanner_qr
+package com.example.ojo_courier
 
 import io.flutter.embedding.android.FlutterActivity
 

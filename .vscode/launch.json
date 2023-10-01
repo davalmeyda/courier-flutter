@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "scanner_qr",
+            "name": "ojo_courier",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "scanner_qr (profile mode)",
+            "name": "ojo_courier (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "scanner_qr (release mode)",
+            "name": "ojo_courier (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

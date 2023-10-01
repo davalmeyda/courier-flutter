@@ -2,14 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+
 import 'package:qr_mobile_vision/qr_camera.dart';
-import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
-import 'package:scanner_qr/features/features.dart';
-import 'package:scanner_qr/shared/config/config.dart';
-import 'package:scanner_qr/shared/shared.dart';
-import 'package:scanner_qr/shared/utils/alert.dart';
 import 'package:flutter_beep/flutter_beep.dart';
-import 'package:scanner_qr/shared/widgets/validaciones.dart';
+
+import 'package:ojo_courier/features/auth/bloc/auth_bloc2.dart';
+import 'package:ojo_courier/features/features.dart';
+import 'package:ojo_courier/shared/shared.dart';
 
 class ReceiveScannerView extends StatefulWidget {
   const ReceiveScannerView({super.key});

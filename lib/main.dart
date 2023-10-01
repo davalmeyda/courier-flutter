@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scanner_qr/features/auth/bloc/auth_bloc.dart';
-import 'package:scanner_qr/shared/shared.dart';
+import 'package:ojo_courier/features/auth/bloc/auth_bloc.dart';
+import 'package:ojo_courier/shared/shared.dart';
 
 void main() {
   runApp(MultiRepositoryProvider(

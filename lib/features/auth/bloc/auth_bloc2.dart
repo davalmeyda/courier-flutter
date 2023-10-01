@@ -1,5 +1,5 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:scanner_qr/models/user.entity.dart';
+import 'package:ojo_courier/models/user.entity.dart';
 
 class AuthBloc2 {
   final BehaviorSubject<User> _user = BehaviorSubject<User>();

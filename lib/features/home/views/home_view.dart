@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scanner_qr/features/auth/bloc/auth_bloc.dart';
-import 'package:scanner_qr/features/features.dart';
+import 'package:ojo_courier/features/auth/bloc/auth_bloc.dart';
+import 'package:ojo_courier/features/features.dart';
 
 class HomeView extends StatelessWidget {
   static const String route = 'HomeView';

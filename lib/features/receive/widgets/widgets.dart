@@ -1,1 +1,1 @@
-export 'package:scanner_qr/features/receive/widgets/receive_card.dart';
+export 'package:ojo_courier/features/receive/widgets/receive_card.dart';

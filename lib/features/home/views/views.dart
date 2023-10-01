@@ -1,1 +1,1 @@
-export 'package:scanner_qr/features/home/views/home_view.dart';
+export 'package:ojo_courier/features/home/views/home_view.dart';

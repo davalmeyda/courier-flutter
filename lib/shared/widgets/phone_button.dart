@@ -8,9 +8,9 @@ class PhoneButtonWidget extends StatelessWidget {
 
   _launchPhone(BuildContext context) async {
     final phoneNumber = 'tel:$phone';
-    if (await canLaunchUrlString(phoneNumber)) {
-      await launchUrlString(phoneNumber, mode: LaunchMode.externalApplication);
-    } else {
+    try {
+      await launchUrlString(phoneNumber, mode: LaunchMode.platformDefault);
+    } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

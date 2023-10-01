@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:scanner_qr/features/features.dart';
+import 'package:ojo_courier/features/features.dart';
 
 class AppRoutes {
   static const String initialRoute = LoginView.route;

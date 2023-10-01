@@ -1,1 +1,1 @@
-export 'package:scanner_qr/features/deliver/widgets/deliver_details.dart';
+export 'package:ojo_courier/features/deliver/widgets/deliver_details.dart';

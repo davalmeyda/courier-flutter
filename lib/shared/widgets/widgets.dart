@@ -1,4 +1,4 @@
-export 'package:scanner_qr/shared/widgets/camera.dart';
-export 'package:scanner_qr/shared/widgets/card.dart';
-export 'package:scanner_qr/shared/widgets/phone_button.dart';
-export 'package:scanner_qr/shared/widgets/validaciones.dart';
+export 'package:ojo_courier/shared/widgets/camera.dart';
+export 'package:ojo_courier/shared/widgets/card.dart';
+export 'package:ojo_courier/shared/widgets/phone_button.dart';
+export 'package:ojo_courier/shared/widgets/validaciones.dart';

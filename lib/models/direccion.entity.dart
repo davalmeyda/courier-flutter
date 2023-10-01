@@ -1,4 +1,4 @@
-import 'package:scanner_qr/models/models.dart';
+import 'package:ojo_courier/models/models.dart';
 
 class Direccion {
   int id;
