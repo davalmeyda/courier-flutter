@@ -23,7 +23,7 @@ class _DeliverListViewState extends State<DeliverListView> {
   @override
   void initState() {
     super.initState();
-    getAllPendingReceives('', authBloc2.user['id'].toString());
+    getAllPendingReceives('', authBloc2.userId.toString());
   }
 
   Future<void> getAllPendingReceives(String searchText, String userId) async {
@@ -75,8 +75,8 @@ class _DeliverListViewState extends State<DeliverListView> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                       fillColor: Colors.white),
-                  onChanged: (value) => getAllPendingReceives(
-                      value, authBloc2.user['id'].toString()),
+                  onChanged: (value) =>
+                      getAllPendingReceives(value, authBloc2.userId.toString()),
                 ),
               ),
               const SizedBox(width: 10),
@@ -122,7 +122,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                     child: RefreshIndicator(
                       onRefresh: () async {
                         await getAllPendingReceives(
-                            '', authBloc2.user['id'].toString());
+                            '', authBloc2.userId.toString());
                       },
                       triggerMode: RefreshIndicatorTriggerMode.anywhere,
                       child: ListView.builder(
@@ -298,7 +298,7 @@ class _DeliverListViewState extends State<DeliverListView> {
                           ElevatedButton(
                             onPressed: () {
                               getAllPendingReceives(
-                                  '', authBloc2.user['id'].toString());
+                                  '', authBloc2.userId.toString());
                             },
                             child: const Icon(Icons.replay),
                           ),

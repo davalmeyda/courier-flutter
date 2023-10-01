@@ -1,22 +1,22 @@
 import 'package:rxdart/rxdart.dart';
 
 class AuthBloc2 {
-  final BehaviorSubject<dynamic> _user = BehaviorSubject<dynamic>();
+  final BehaviorSubject<int?> _userId = BehaviorSubject<int>();
 
   AuthBloc2() {
-    _user.add(null);
+    _userId.add(null);
   }
 
-  Stream<dynamic> get userStram => _user.stream;
+  Stream<dynamic> get userStream => _userId.stream;
 
-  dynamic get user => _user.value;
+  dynamic get userId => _userId.hasValue ? _userId.value : null;
 
-  void setUser(dynamic user) {
-    _user.add(user);
+  void setUser(int id) {
+    _userId.add(id);
   }
 
   void dispose() {
-    _user.close();
+    _userId.close();
   }
 }
 

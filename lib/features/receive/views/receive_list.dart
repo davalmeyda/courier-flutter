@@ -22,7 +22,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
   @override
   void initState() {
     super.initState();
-    getAllPendingReceives('', authBloc2.user['id'].toString());
+    getAllPendingReceives('', authBloc2.userId.toString());
   }
 
   Future<void> getAllPendingReceives(String searchText, String userId) async {
@@ -62,7 +62,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
           child: Row(
             children: [
               Expanded(
@@ -74,28 +74,9 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                       fillColor: Colors.white),
-                  onChanged: (value) => getAllPendingReceives(
-                      value, authBloc2.user['id'].toString()),
+                  onChanged: (value) =>
+                      getAllPendingReceives(value, authBloc2.userId.toString()),
                 ),
-              ),
-              const SizedBox(width: 10),
-              MaterialButton(
-                height: 50,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                disabledColor: Colors.grey,
-                elevation: 0,
-                color: Colors.blue,
-                child: const Center(
-                  child: Icon(
-                    Icons.document_scanner,
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, ReceiveScannerView.route);
-                },
               ),
             ],
           ),
@@ -121,8 +102,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                     child: RefreshIndicator(
                       triggerMode: RefreshIndicatorTriggerMode.anywhere,
                       onRefresh: () async {
-                        getAllPendingReceives(
-                            '', authBloc2.user['id'].toString());
+                        getAllPendingReceives('', authBloc2.userId.toString());
                       },
                       child: ListView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -250,7 +230,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                           ElevatedButton(
                             onPressed: () {
                               getAllPendingReceives(
-                                  '', authBloc2.user['id'].toString());
+                                  '', authBloc2.userId.toString());
                             },
                             child: const Icon(Icons.replay),
                           ),

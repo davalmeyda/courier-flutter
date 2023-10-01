@@ -7,8 +7,6 @@ class Pedido {
   int? condicionEnvioCode;
   String? codigo;
   String? cRazonsocial;
-  String? createdAt;
-  String? updatedAt;
   DireccionDt? direccionDt;
 
   Pedido({
@@ -18,8 +16,6 @@ class Pedido {
     this.condicionEnvioCode,
     this.codigo,
     this.cRazonsocial,
-    this.createdAt,
-    this.updatedAt,
     this.direccionDt,
   });
 
@@ -30,8 +26,6 @@ class Pedido {
         condicionEnvioCode: json["condicion_envio_code"],
         codigo: json["codigo"],
         cRazonsocial: json["c_razonsocial"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
         direccionDt: json["direccionDt"] != null
             ? DireccionDt.fromJson(json["direccionDt"])
             : null,

@@ -37,7 +37,7 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
     final map = json.decode(response.body) as Map<String, dynamic>;
     if (!context.mounted) return;
     if (map['statusCode'] == 202) {
-      authBloc2.setUser(map['body']);
+      authBloc2.setUser(map['body']['id']);
       _navigateToHome(context);
     } else {
       _showErrorDialog(map['message'], context);
