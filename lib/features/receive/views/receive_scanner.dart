@@ -17,8 +17,11 @@ class ReceiveScannerView extends StatefulWidget {
 }
 
 class _ReceiveScannerViewState extends State<ReceiveScannerView> {
+  final codeValueController = TextEditingController();
   List<String>? receiveListToConfirm = [];
   String? errorMessage;
+  String? codeValue;
+  bool isKeyboard = false;
   bool loading = false;
 
   @override
@@ -112,6 +115,24 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Recibir'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                onPressed: () {
+                  setState(() {
+                    isKeyboard = !isKeyboard;
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.blue),
+                ),
+                color: Colors.white,
+                icon: Icon(isKeyboard ? Icons.camera_alt : Icons.keyboard),
+              ),
+            ),
+          ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: receiveListToConfirm!.isNotEmpty
@@ -125,19 +146,64 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
             : null,
         body: Column(
           children: [
-            Container(
-              height: 250,
-              width: double.infinity,
-              color: Colors.black,
-              child: QrCamera(
-                onError: (context, error) => Text(
-                  error.toString(),
-                  style: const TextStyle(color: Colors.red),
-                ),
-                cameraDirection: CameraDirection.BACK,
-                qrCodeCallback: agregarLista,
-              ),
-            ),
+            isKeyboard
+                ? Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        child: TextField(
+                          autofocus: true,
+                          controller: codeValueController,
+                          decoration: const InputDecoration(
+                            hintText: 'Ingrese el código',
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (value) => setState(() {
+                            codeValue = value;
+                          }),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: SizedBox(
+                          height: 50,
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                            ),
+                            onPressed:
+                                codeValue != null && codeValue!.length < 2
+                                    ? null
+                                    : () {
+                                        setState(() {
+                                          receiveListToConfirm!.add(codeValue!);
+                                        });
+                                        codeValueController.clear();
+                                      },
+                            child: const Text(
+                              'Agregar código',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20)
+                    ],
+                  )
+                : Container(
+                    height: 250,
+                    width: double.infinity,
+                    color: Colors.black,
+                    child: QrCamera(
+                      onError: (context, error) => Text(
+                        error.toString(),
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      cameraDirection: CameraDirection.BACK,
+                      qrCodeCallback: agregarLista,
+                    ),
+                  ),
             receiveListToConfirm!.isNotEmpty
                 ? Expanded(
                     child: ListView.builder(
@@ -211,17 +277,19 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                       },
                     ),
                   )
-                : Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      child: const Text(
-                        'Escanee un código de barras',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                : isKeyboard
+                    ? const SizedBox()
+                    : Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          child: const Text(
+                            'Escanee un código de barras',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
           ],
         ));
   }

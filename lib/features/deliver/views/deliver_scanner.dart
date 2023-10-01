@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 import 'package:scanner_qr/features/deliver/views/deliver_details.dart';
-import 'package:scanner_qr/features/features.dart';
 import 'package:scanner_qr/models/models.dart';
 import 'package:scanner_qr/shared/shared.dart';
-import 'package:scanner_qr/features/auth/bloc/auth_bloc2.dart';
-import 'package:scanner_qr/shared/widgets/validaciones.dart';
 
 class DeliverScannerView extends StatefulWidget {
   const DeliverScannerView({super.key});
@@ -19,6 +16,9 @@ class DeliverScannerView extends StatefulWidget {
 }
 
 class _DeliverScannerViewState extends State<DeliverScannerView> {
+  final codeValueController = TextEditingController();
+  String? codeValue;
+  bool isKeyboard = false;
   Direccion? adress;
   Cliente? client;
   Ubicacion? deliverLocation;
@@ -89,46 +89,63 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Despachar'),
-        ),
-        body: Container(
-          child: adress != null
-              ? DeliverDetails(adress, client, deliverAgency, deliverLocation)
-              : Column(
-                  children: [
-                    Container(
-                      height: 250,
-                      width: double.infinity,
-                      color: Colors.black,
-                      child: QrCamera(
-                        onError: (context, error) => Text(
-                          error.toString(),
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                        cameraDirection: CameraDirection.BACK,
-                        qrCodeCallback: (code) async {
-                          if (code!.isNotEmpty) {
-                            if (validarCodigoEscaneado(code)) {
-                              getDeliverDetails(code);
-                            }
-                          }
-                        },
+      appBar: AppBar(
+        title: const Text('Despachar'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              onPressed: () {
+                setState(() {
+                  isKeyboard = !isKeyboard;
+                });
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.blue),
+              ),
+              color: Colors.white,
+              icon: Icon(isKeyboard ? Icons.camera_alt : Icons.keyboard),
+            ),
+          ),
+        ],
+      ),
+      body: Container(
+        child: adress != null
+            ? DeliverDetails(adress, client, deliverAgency, deliverLocation)
+            : Column(
+                children: [
+                  Container(
+                    height: 250,
+                    width: double.infinity,
+                    color: Colors.black,
+                    child: QrCamera(
+                      onError: (context, error) => Text(
+                        error.toString(),
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      cameraDirection: CameraDirection.BACK,
+                      qrCodeCallback: (code) async {
+                        if (code!.isNotEmpty) {
+                          getDeliverDetails(code);
+                        }
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        messageStatus,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          messageStatus,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-        ));
+                  ),
+                ],
+              ),
+      ),
+    );
   }
 }

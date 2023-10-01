@@ -63,7 +63,7 @@ class _DeliverListViewState extends State<DeliverListView> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
           child: Row(
             children: [
               Expanded(
@@ -75,28 +75,9 @@ class _DeliverListViewState extends State<DeliverListView> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.search),
                       fillColor: Colors.white),
-                  onChanged: (value) =>
-                      getAllPendingReceives(value, authBloc2.user.id.toString()),
+                  onChanged: (value) => getAllPendingReceives(
+                      value, authBloc2.user.id.toString()),
                 ),
-              ),
-              const SizedBox(width: 10),
-              MaterialButton(
-                height: 50,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                disabledColor: Colors.grey,
-                elevation: 0,
-                color: Colors.blue,
-                child: const Center(
-                  child: Icon(
-                    Icons.document_scanner,
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, DeliverScannerView.route);
-                },
               ),
             ],
           ),
@@ -214,64 +195,50 @@ class _DeliverListViewState extends State<DeliverListView> {
                                       : const SizedBox(),
                                   const SizedBox(height: 10),
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
+                                      const Icon(Icons.account_circle_outlined),
+                                      const SizedBox(width: 10),
                                       Expanded(
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Icon(Icons
-                                                    .account_circle_outlined),
-                                                const SizedBox(width: 10),
-                                                Expanded(
-                                                  child: Text(
-                                                      adresses.nombreContacto ??
-                                                          ''),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Icon(Icons.pin_drop),
-                                                const SizedBox(width: 10),
-                                                Expanded(
-                                                  child: Text(
-                                                      adresses.direccion ?? ''),
-                                                ),
-                                              ],
-                                            ),
-                                            adresses.empresaTransporte == null
-                                                ? const SizedBox()
-                                                : const SizedBox(height: 10),
-                                            adresses.empresaTransporte == null
-                                                ? const SizedBox()
-                                                : Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      const Icon(Icons
-                                                          .business_outlined),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
-                                                        child: Text(adresses
-                                                                .empresaTransporte ??
-                                                            ''),
-                                                      ),
-                                                    ],
-                                                  ),
-                                          ],
-                                        ),
-                                      ),
-                                      PhoneButtonWidget(
-                                        phone: adresses.celulares ?? '',
+                                        child:
+                                            Text(adresses.nombreContacto ?? ''),
                                       ),
                                     ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.pin_drop),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(adresses.direccion ?? ''),
+                                      ),
+                                    ],
+                                  ),
+                                  adresses.empresaTransporte == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.empresaTransporte == null
+                                      ? const SizedBox()
+                                      : Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.business_outlined),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adresses.empresaTransporte ??
+                                                      ''),
+                                            ),
+                                          ],
+                                        ),
+                                  const SizedBox(height: 20),
+                                  PhoneButtonWidget(
+                                    phone: adresses.celulares ?? '',
                                   ),
                                 ],
                               ),
