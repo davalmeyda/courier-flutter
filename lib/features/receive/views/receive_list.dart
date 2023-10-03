@@ -188,6 +188,41 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                       ),
                                     ],
                                   ),
+                                  adresses.idAgencia == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.idAgencia == null
+                                      ? const SizedBox()
+                                      : Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.business_outlined),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child:
+                                                  Text(adresses.agencia ?? ''),
+                                            ),
+                                          ],
+                                        ),
+                                  adresses.idUbicacion == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.idUbicacion == null
+                                      ? const SizedBox()
+                                      : Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                                Icons.location_on_rounded),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adresses.ubicacion ?? ''),
+                                            ),
+                                          ],
+                                        ),
                                   adresses.empresaTransporte == null
                                       ? const SizedBox()
                                       : const SizedBox(height: 10),

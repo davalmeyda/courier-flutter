@@ -8,6 +8,8 @@ class Direccion {
   int? idUbicacion;
   int? idMotorizado;
   String? dniRuc;
+  String? agencia;
+  String? ubicacion;
   String? nombreContacto;
   String? celulares;
   String? direccion;
@@ -32,8 +34,10 @@ class Direccion {
     required this.id,
     this.correlativo,
     this.idAgencia,
+    this.agencia,
     this.idCliente,
     this.idUbicacion,
+    this.ubicacion,
     this.idMotorizado,
     this.dniRuc,
     this.nombreContacto,
@@ -62,7 +66,9 @@ class Direccion {
         correlativo: json["correlativo"],
         idCliente: json["id_cliente"],
         idAgencia: json["id_agencia"],
+        agencia: json["agencia"],
         idUbicacion: json["id_ubicacion"],
+        ubicacion: json["ubicacion"],
         idMotorizado: json["id_motorizado"],
         direccion: json["direccion"],
         recibido: json["recibido"],

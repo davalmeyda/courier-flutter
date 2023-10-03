@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 
 class CardWidget extends StatelessWidget {
   final Widget child;
+  final Color? color;
 
-  const CardWidget({Key? key, required this.child}) : super(key: key);
+  const CardWidget({Key? key, required this.child, this.color = Colors.white})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             offset: Offset(0, 5),

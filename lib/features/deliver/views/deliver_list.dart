@@ -7,6 +7,9 @@ import 'package:ojo_courier/shared/shared.dart';
 
 import 'package:ojo_courier/features/auth/bloc/auth_bloc2.dart';
 
+String defaultMessage =
+    'Estimado%20cliente%2C%20%F0%9F%99%8B%F0%9F%8F%BC%E2%80%8D%E2%99%82%EF%B8%8F%F0%9F%99%8B%F0%9F%8F%BB%E2%80%8D%E2%99%80%EF%B8%8F%0ALe%20saluda%2C%20Motorizado%20Courier.%0ALe%20escribo%20para%20informarle%20que%20para%20el%20d%C3%ADa%20de%20hoy%20se%20le%20estar%C3%A1%20contactando%2C%20para%20la%20entrega%20de%20un%20documento%20que%20tengo%20a%20su%20nombre%2C%20le%20pedimos%20su%20colaboraci%C3%B3n%20en%20el%20envi%C3%B3%20de%20su%20ubicaci%C3%B3n%20actual%2C%20para%20la%20entrega%20del%20sobre.%20%C2%A1Que%20tenga%20un%20buen%20d%C3%ADa!';
+
 class DeliverListView extends StatefulWidget {
   const DeliverListView({super.key});
   static const String route = 'DeliverListView';
@@ -123,6 +126,10 @@ class _DeliverListViewState extends State<DeliverListView> {
                               // );
                             },
                             child: CardWidget(
+                              color: adresses.reprogramaciones != null &&
+                                      adresses.reprogramaciones!.length == 2
+                                  ? Colors.red[300]
+                                  : Colors.white,
                               child: Column(
                                 children: [
                                   Row(
@@ -175,17 +182,29 @@ class _DeliverListViewState extends State<DeliverListView> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const Icon(
+                                            Icon(
                                               Icons.warning,
-                                              color: Colors.red,
+                                              color: adresses.reprogramaciones !=
+                                                          null &&
+                                                      adresses.reprogramaciones!
+                                                              .length ==
+                                                          2
+                                                  ? Colors.white
+                                                  : Colors.red,
                                             ),
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: Text(
                                                 'Reprogramaciones: ${adresses.reprogramaciones!.length.toString()}',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  color: Colors.red,
+                                                  color: adresses.reprogramaciones !=
+                                                              null &&
+                                                          adresses.reprogramaciones!
+                                                                  .length ==
+                                                              2
+                                                      ? Colors.white
+                                                      : Colors.red,
                                                 ),
                                               ),
                                             ),
@@ -217,6 +236,41 @@ class _DeliverListViewState extends State<DeliverListView> {
                                       ),
                                     ],
                                   ),
+                                  adresses.idAgencia == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.idAgencia == null
+                                      ? const SizedBox()
+                                      : Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.business_outlined),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child:
+                                                  Text(adresses.agencia ?? ''),
+                                            ),
+                                          ],
+                                        ),
+                                  adresses.idUbicacion == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.idUbicacion == null
+                                      ? const SizedBox()
+                                      : Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                                Icons.location_on_rounded),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(
+                                                  adresses.ubicacion ?? ''),
+                                            ),
+                                          ],
+                                        ),
                                   adresses.empresaTransporte == null
                                       ? const SizedBox()
                                       : const SizedBox(height: 10),
@@ -235,10 +289,44 @@ class _DeliverListViewState extends State<DeliverListView> {
                                             ),
                                           ],
                                         ),
-                                  const SizedBox(height: 20),
-                                  PhoneButtonWidget(
-                                    phone: adresses.celulares ?? '',
-                                  ),
+                                  adresses.celulares == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 20),
+                                  adresses.celulares == null
+                                      ? const SizedBox()
+                                      : LaunchButtonWidget(
+                                          url: 'tel:${adresses.celulares}',
+                                          label:
+                                              'Llamar: ${adresses.celulares}',
+                                          errorLabel:
+                                              'No se pudo iniciar la llamada',
+                                          icon: Icons.phone,
+                                        ),
+                                  adresses.googleMaps == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.googleMaps == null
+                                      ? const SizedBox()
+                                      : LaunchButtonWidget(
+                                          url: adresses.googleMaps ?? '',
+                                          label: 'Google Maps',
+                                          errorLabel:
+                                              'No se pudo iniciar la aplicación',
+                                          icon: Icons.pin_drop,
+                                        ),
+                                  adresses.celulares == null
+                                      ? const SizedBox()
+                                      : const SizedBox(height: 10),
+                                  adresses.celulares == null
+                                      ? const SizedBox()
+                                      : LaunchButtonWidget(
+                                          url:
+                                              'https://wa.me/${adresses.celulares}?text=$defaultMessage',
+                                          label: 'Contactar por WhatsApp',
+                                          errorLabel:
+                                              'No se pudo abrir WhatsApp',
+                                          // icon: Icons.phone,
+                                        ),
                                 ],
                               ),
                             ),

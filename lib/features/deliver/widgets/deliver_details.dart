@@ -24,7 +24,7 @@ class DeliverDetails extends StatefulWidget {
 
 class _DeliverDetailsState extends State<DeliverDetails> {
   int? amount = 0;
-  String? paymentType;
+  String? paymentType = 'AL CONTADO';
   List<File>? deliverPhotos = [];
   bool? loading;
 
@@ -83,7 +83,14 @@ class _DeliverDetailsState extends State<DeliverDetails> {
       final map = json.decode(response.body) as Map<String, dynamic>;
 
       if (map['statusCode'] == 200) {
-        Navigator.pop(context, HomeView.route);
+        if (!context.mounted) return;
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeView(),
+          ),
+          (route) => false,
+        );
       } else {
         if (!context.mounted) return;
         showDialog(
@@ -515,31 +522,35 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 50,
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DeliverRescheduleView(
-                            deliver: widget.adress!,
-                          ),
-                        ));
-                  },
-                  child: const Text(
-                    'Reprogramar',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
+              widget.adress?.reprogramaciones != null &&
+                      widget.adress!.reprogramaciones!.length == 2
+                  ? const SizedBox()
+                  : const SizedBox(height: 10),
+              widget.adress?.reprogramaciones != null &&
+                      widget.adress!.reprogramaciones!.length == 2
+                  ? const SizedBox()
+                  : SizedBox(
+                      height: 50,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DeliverRescheduleView(
+                                  deliver: widget.adress!,
+                                ),
+                              ));
+                        },
+                        child: const Text(
+                          'Reprogramar',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
               const SizedBox(
                 height: 10,
               ),
