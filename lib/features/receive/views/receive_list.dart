@@ -197,11 +197,26 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const Icon(Icons.business_outlined),
+                                            Icon(
+                                              Icons.business_outlined,
+                                              color: adresses.idAgencia == 1
+                                                  ? Colors.orange
+                                                  : adresses.idAgencia == 2
+                                                      ? Colors.purple
+                                                      : Colors.blue,
+                                            ),
                                             const SizedBox(width: 10),
                                             Expanded(
-                                              child:
-                                                  Text(adresses.agencia ?? ''),
+                                              child: Text(
+                                                adresses.agencia ?? '',
+                                                style: TextStyle(
+                                                  color: adresses.idAgencia == 1
+                                                      ? Colors.orange
+                                                      : adresses.idAgencia == 2
+                                                          ? Colors.purple
+                                                          : Colors.blue,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -214,12 +229,23 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const Icon(
-                                                Icons.location_on_rounded),
+                                            Icon(
+                                              Icons.location_on_rounded,
+                                              color: adresses.idUbicacion == 1
+                                                  ? Colors.brown
+                                                  : Colors.green,
+                                            ),
                                             const SizedBox(width: 10),
                                             Expanded(
                                               child: Text(
-                                                  adresses.ubicacion ?? ''),
+                                                adresses.ubicacion ?? '',
+                                                style: TextStyle(
+                                                  color:
+                                                      adresses.idUbicacion == 1
+                                                          ? Colors.brown
+                                                          : Colors.green,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
