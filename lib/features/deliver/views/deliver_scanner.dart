@@ -86,6 +86,13 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
           );
         }
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No se pudo validar el código: $deliverCode'),
+          duration: const Duration(milliseconds: 1500),
+        ),
+      );
     }
   }
 
@@ -105,7 +112,8 @@ class _DeliverScannerViewState extends State<DeliverScannerView> {
                 });
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(CustomColors.primary),
+                backgroundColor:
+                    MaterialStateProperty.all(CustomColors.primary),
               ),
               color: Colors.white,
               icon: Icon(isKeyboard ? Icons.camera_alt : Icons.keyboard),
