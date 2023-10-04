@@ -56,22 +56,6 @@ class _DeliverDetailsState extends State<DeliverDetails> {
         );
         return;
       }
-      for (var element in deliverPhotos!) {
-        final request = http.MultipartRequest(
-          'PUT',
-          Uri.parse(
-              '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${order.pedido?.codigo}?user_id=${authBloc2.user!.id}&importe=$amount'),
-        );
-        request.files.add(
-          http.MultipartFile(
-            'imagen',
-            element.readAsBytes().asStream(),
-            element.lengthSync(),
-            filename: element.path.split('/').last,
-          ),
-        );
-        await request.send();
-      }
       final response = await http.put(
         Uri.parse(
             '${EnvironmentVariables.baseUrl}pedido/entregar/${order.pedido?.codigo}?idUser=${authBloc2.user!.id}&importe=$amount&forma_pago=$paymentType'),
@@ -102,6 +86,23 @@ class _DeliverDetailsState extends State<DeliverDetails> {
           ),
         );
       }
+    }
+
+    for (var element in deliverPhotos!) {
+      final request = http.MultipartRequest(
+        'PUT',
+        Uri.parse(
+            '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${widget.adress?.id}?user_id=${authBloc2.user!.id}&importe=$amount'),
+      );
+      request.files.add(
+        http.MultipartFile(
+          'imagen',
+          element.readAsBytes().asStream(),
+          element.lengthSync(),
+          filename: element.path.split('/').last,
+        ),
+      );
+      await request.send();
     }
 
     setState(() {
