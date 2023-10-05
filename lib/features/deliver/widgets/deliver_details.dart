@@ -46,8 +46,39 @@ class _DeliverDetailsState extends State<DeliverDetails> {
     }
     List<DireccionDt> orders =
         widget.adress?.direciones != null ? widget.adress!.direciones! : [];
+
+    for (var element in deliverPhotos!) {
+      final request = http.MultipartRequest(
+        'PUT',
+        Uri.parse(
+            '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${widget.adress?.id}?user_id=${authBloc2.user!.id}&importe=$amount'),
+      );
+      request.files.add(
+        http.MultipartFile(
+          'imagen',
+          element.readAsBytes().asStream(),
+          element.lengthSync(),
+          filename: element.path.split('/').last,
+        ),
+      );
+      final respImg = await request.send();
+      if (respImg.statusCode != 200) {
+        if (!context.mounted) return;
+        showDialog(
+          context: context,
+          builder: (context) => showSimpleDialog(
+            'Error',
+            'Error al subir la imagen',
+            context,
+          ),
+        );
+        return;
+      }
+    }
+
     for (var order in orders) {
       if (order.recibido == 0) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('No ha sido recibido'),
@@ -66,16 +97,7 @@ class _DeliverDetailsState extends State<DeliverDetails> {
 
       final map = json.decode(response.body) as Map<String, dynamic>;
 
-      if (map['statusCode'] == 200) {
-        if (!context.mounted) return;
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeView(),
-          ),
-          (route) => false,
-        );
-      } else {
+      if (response.statusCode != 200) {
         if (!context.mounted) return;
         showDialog(
           context: context,
@@ -85,25 +107,18 @@ class _DeliverDetailsState extends State<DeliverDetails> {
             context,
           ),
         );
+        return;
       }
     }
 
-    for (var element in deliverPhotos!) {
-      final request = http.MultipartRequest(
-        'PUT',
-        Uri.parse(
-            '${EnvironmentVariables.baseUrl}pedido/imagenDespacho/${widget.adress?.id}?user_id=${authBloc2.user!.id}&importe=$amount'),
-      );
-      request.files.add(
-        http.MultipartFile(
-          'imagen',
-          element.readAsBytes().asStream(),
-          element.lengthSync(),
-          filename: element.path.split('/').last,
-        ),
-      );
-      await request.send();
-    }
+    if (!context.mounted) return;
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeView(),
+      ),
+      (route) => false,
+    );
 
     setState(() {
       loading = false;
