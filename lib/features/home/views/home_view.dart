@@ -12,7 +12,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inicio'),
+        title: const Text('Courier v1.0.0'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
