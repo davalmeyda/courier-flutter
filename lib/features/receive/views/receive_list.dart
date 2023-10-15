@@ -44,6 +44,9 @@ class _ReceiveListViewState extends State<ReceiveListView> {
         loading = false;
       });
     } else {
+      setState(() {
+        loading = false;
+      });
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -51,9 +54,6 @@ class _ReceiveListViewState extends State<ReceiveListView> {
           duration: const Duration(milliseconds: 1000),
         ),
       );
-      setState(() {
-        loading = false;
-      });
     }
   }
 

@@ -50,11 +50,15 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
     if (map['statusCode'] == 200) {
       setState(() {
         receiveListToConfirm!.clear();
+        loading = false;
       });
       QrCameraState().stop();
       if (!context.mounted) return;
       Navigator.popAndPushNamed(context, HomeView.route);
     } else {
+      setState(() {
+        loading = false;
+      });
       if (!context.mounted) return;
       showDialog(
         context: context,
@@ -65,10 +69,6 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
         ),
       );
     }
-
-    setState(() {
-      loading = false;
-    });
   }
 
   dynamic currentBackPressTime;
@@ -127,7 +127,8 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(CustomColors.primary),
+                  backgroundColor:
+                      MaterialStateProperty.all(CustomColors.primary),
                 ),
                 color: Colors.white,
                 icon: Icon(isKeyboard ? Icons.camera_alt : Icons.keyboard),
@@ -138,9 +139,11 @@ class _ReceiveScannerViewState extends State<ReceiveScannerView> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: receiveListToConfirm!.isNotEmpty
             ? FloatingActionButton.extended(
-                onPressed: () {
-                  changeStatusManyReceives(context);
-                },
+                onPressed: loading
+                    ? null
+                    : () {
+                        changeStatusManyReceives(context);
+                      },
                 label: const Text('Confirmar'),
                 icon: const Icon(Icons.check),
               )

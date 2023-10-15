@@ -26,7 +26,7 @@ class _DeliverDetailsState extends State<DeliverDetails> {
   int? amount = 0;
   String? paymentType = 'AL CONTADO';
   List<File>? deliverPhotos = [];
-  bool? loading;
+  bool? loading = false;
 
   Future<void> confirmDelivery() async {
     setState(() {
@@ -63,6 +63,9 @@ class _DeliverDetailsState extends State<DeliverDetails> {
       );
       final respImg = await request.send();
       if (respImg.statusCode != 200) {
+        setState(() {
+          loading = false;
+        });
         if (!context.mounted) return;
         showDialog(
           context: context,
@@ -78,6 +81,9 @@ class _DeliverDetailsState extends State<DeliverDetails> {
 
     for (var order in orders) {
       if (order.recibido == 0) {
+        setState(() {
+          loading = false;
+        });
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -98,6 +104,9 @@ class _DeliverDetailsState extends State<DeliverDetails> {
       final map = json.decode(response.body) as Map<String, dynamic>;
 
       if (response.statusCode != 200) {
+        setState(() {
+          loading = false;
+        });
         if (!context.mounted) return;
         showDialog(
           context: context,
@@ -111,6 +120,9 @@ class _DeliverDetailsState extends State<DeliverDetails> {
       }
     }
 
+    setState(() {
+      loading = false;
+    });
     if (!context.mounted) return;
     Navigator.pushAndRemoveUntil(
       context,
@@ -119,10 +131,6 @@ class _DeliverDetailsState extends State<DeliverDetails> {
       ),
       (route) => false,
     );
-
-    setState(() {
-      loading = false;
-    });
   }
 
   @override
@@ -577,8 +585,11 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                   ),
-                  onPressed:
-                      deliverPhotos!.isEmpty ? null : () => confirmDelivery(),
+                  onPressed: loading
+                      ? null
+                      : deliverPhotos!.isEmpty
+                          ? null
+                          : () => confirmDelivery(),
                   child: const Text(
                     'Entregado',
                     style: TextStyle(color: Colors.white),

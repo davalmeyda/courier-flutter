@@ -27,6 +27,7 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
   Direccion? deliver;
   String? reason;
   List<File>? deliverPhotos = [];
+  bool? loading = false;
 
   @override
   void initState() {
@@ -35,10 +36,19 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
   }
 
   Future<void> confirmReschedule(BuildContext context) async {
+    setState(() {
+      loading = true;
+    });
     if (deliverPhotos!.isEmpty) {
+      setState(() {
+        loading = false;
+      });
       return;
     }
     if (reason == null || reason!.length < 5) {
+      setState(() {
+        loading = false;
+      });
       return;
     }
 
@@ -68,6 +78,9 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
         );
         await request.send();
       }
+      setState(() {
+        loading = false;
+      });
       if (!context.mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
@@ -77,6 +90,9 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
         (route) => false,
       );
     } else {
+      setState(() {
+        loading = false;
+      });
       if (!context.mounted) return;
       showDialog(
         context: context,
@@ -262,10 +278,12 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                       ),
-                      onPressed: deliverPhotos!.isEmpty ||
-                              (reason == null ? true : reason!.length < 5)
+                      onPressed: loading
                           ? null
-                          : () => confirmReschedule(context),
+                          : deliverPhotos!.isEmpty ||
+                                  (reason == null ? true : reason!.length < 5)
+                              ? null
+                              : () => confirmReschedule(context),
                       child: const Text(
                         'No entregado',
                         style: TextStyle(color: Colors.white),

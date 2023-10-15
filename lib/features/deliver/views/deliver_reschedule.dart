@@ -24,6 +24,7 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
   Direccion? deliver;
   String? reason;
   List<File>? deliverPhotos = [];
+  bool? loading = false;
 
   @override
   void initState() {
@@ -32,10 +33,19 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
   }
 
   Future<void> confirmReschedule(BuildContext context) async {
+    setState(() {
+      loading = true;
+    });
     if (deliverPhotos!.isEmpty) {
+      setState(() {
+        loading = false;
+      });
       return;
     }
     if (reason == null || reason!.length < 5) {
+      setState(() {
+        loading = false;
+      });
       return;
     }
 
@@ -65,6 +75,9 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
         );
         await request.send();
       }
+      setState(() {
+        loading = false;
+      });
       if (!context.mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
@@ -74,6 +87,9 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
         (route) => false,
       );
     } else {
+      setState(() {
+        loading = false;
+      });
       if (!context.mounted) return;
       showDialog(
         context: context,
@@ -259,10 +275,12 @@ class _DeliverRescheduleViewState extends State<DeliverRescheduleView> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: CustomColors.primary,
                       ),
-                      onPressed: deliverPhotos!.isEmpty ||
-                              (reason == null ? true : reason!.length < 5)
+                      onPressed: loading
                           ? null
-                          : () => confirmReschedule(context),
+                          : deliverPhotos!.isEmpty ||
+                                  (reason == null ? true : reason!.length < 5)
+                              ? null
+                              : () => confirmReschedule(context),
                       child: const Text(
                         'Reprogramar',
                         style: TextStyle(color: Colors.white),
