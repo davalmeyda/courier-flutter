@@ -27,7 +27,7 @@ class _DeliverRejectViewState extends State<DeliverRejectView> {
   Direccion? deliver;
   String? reason;
   List<File>? deliverPhotos = [];
-  bool? loading = false;
+  bool loading = false;
 
   @override
   void initState() {

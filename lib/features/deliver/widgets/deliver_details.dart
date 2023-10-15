@@ -26,7 +26,7 @@ class _DeliverDetailsState extends State<DeliverDetails> {
   int? amount = 0;
   String? paymentType = 'AL CONTADO';
   List<File>? deliverPhotos = [];
-  bool? loading = false;
+  bool loading = false;
 
   Future<void> confirmDelivery() async {
     setState(() {
@@ -145,10 +145,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Correlativo:'),
+                  const Text(
+                    'Correlativo:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(widget.adress!.correlativo ?? ''),
+                    child: Text(
+                      widget.adress!.correlativo ?? '',
+                      textAlign: TextAlign.right,
+                    ),
                   ),
                 ],
               ),
@@ -159,10 +165,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Dirección:'),
+                        const Text(
+                          'Dirección:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(widget.adress!.direccion ?? ''),
+                          child: Text(
+                            widget.adress!.direccion ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -174,10 +186,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Departamento:'),
+                        const Text(
+                          'Departamento:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(widget.adress!.departamento ?? ''),
+                          child: Text(
+                            widget.adress!.departamento ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -189,10 +207,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Provincia:'),
+                        const Text(
+                          'Provincia:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(widget.adress!.provincia ?? ''),
+                          child: Text(
+                            widget.adress!.provincia ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -204,10 +228,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Distrito:'),
+                        const Text(
+                          'Distrito:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(widget.adress!.distrito ?? ''),
+                          child: Text(
+                            widget.adress!.distrito ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -219,10 +249,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Referencia:'),
+                        const Text(
+                          'Referencia:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(widget.adress!.referencia ?? ''),
+                          child: Text(
+                            widget.adress!.referencia ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -234,10 +270,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Observaciones:'),
+                        const Text(
+                          'Observaciones:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(widget.adress!.observaciones ?? ''),
+                          child: Text(
+                            widget.adress!.observaciones ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -249,10 +291,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Documento:'),
+                        const Text(
+                          'Documento:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(widget.adress!.dniRuc ?? ''),
+                          child: Text(
+                            widget.adress!.dniRuc ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -264,10 +312,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Contacto:'),
+                        const Text(
+                          'Contacto:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(widget.adress!.nombreContacto ?? ''),
+                          child: Text(
+                            widget.adress!.nombreContacto ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -279,11 +333,16 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Cliente:'),
+                        const Text(
+                          'Cliente:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                              '${widget.client?.dni != null ? '${widget.client?.dni} / ' : ''}${widget.client?.nombre ?? ''}'),
+                            '${widget.client?.dni != null ? '${widget.client?.dni} / ' : ''}${widget.client?.nombre ?? ''}',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -295,57 +354,79 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('DNI Cliente:'),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(widget.client?.dni ?? ''),
+                        const Text(
+                          'DNI Cliente:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    )
-                  : const SizedBox(),
-              widget.client?.celular != null
-                  ? const SizedBox(height: 10)
-                  : const SizedBox(),
-              widget.client?.celular != null
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Celular del Cliente:'),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(widget.client?.celular.toString() ?? ''),
-                        ),
-                      ],
-                    )
-                  : const SizedBox(),
-              widget.deliverAgency?.nombreAgencia != null
-                  ? const SizedBox(height: 10)
-                  : const SizedBox(),
-              widget.deliverAgency?.nombreAgencia != null
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Agencia:'),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child:
-                              Text(widget.deliverAgency?.nombreAgencia ?? ''),
-                        ),
-                      ],
-                    )
-                  : const SizedBox(),
-              widget.deliverLocation?.nombreUbicacion != null
-                  ? const SizedBox(height: 10)
-                  : const SizedBox(),
-              widget.deliverLocation?.nombreUbicacion != null
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Destino:'),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                              widget.deliverLocation?.nombreUbicacion ?? ''),
+                            widget.client?.dni ?? '',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              widget.client?.celular != null
+                  ? const SizedBox(height: 10)
+                  : const SizedBox(),
+              widget.client?.celular != null
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Celular del Cliente:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            widget.client?.celular.toString() ?? '',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              widget.deliverAgency?.nombreAgencia != null
+                  ? const SizedBox(height: 10)
+                  : const SizedBox(),
+              widget.deliverAgency?.nombreAgencia != null
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Agencia:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            widget.deliverAgency?.nombreAgencia ?? '',
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              widget.deliverLocation?.nombreUbicacion != null
+                  ? const SizedBox(height: 10)
+                  : const SizedBox(),
+              widget.deliverLocation?.nombreUbicacion != null
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Destino:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            widget.deliverLocation?.nombreUbicacion ?? '',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     )
@@ -354,19 +435,20 @@ class _DeliverDetailsState extends State<DeliverDetails> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Pedidos:'),
+                  const Text(
+                    'Pedidos:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: widget.adress!.direciones!.map(
                         (DireccionDt orderDetail) {
                           if (orderDetail.recibido != 0) {
-                            return Row(
-                              children: [
-                                Text(
-                                  orderDetail.codigo ?? '',
-                                ),
-                              ],
+                            return Text(
+                              orderDetail.codigo ?? '',
+                              textAlign: TextAlign.right,
                             );
                           }
                           return const SizedBox();
@@ -460,8 +542,8 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ElevatedButton(
                     onPressed: () async {
                       final picker = ImagePicker();
-                      final pickedFile =
-                          await picker.pickImage(source: ImageSource.camera);
+                      final pickedFile = await picker.pickImage(
+                          source: ImageSource.camera, maxWidth: 800);
                       if (pickedFile != null) {
                         final List<File> compressedImages = deliverPhotos ?? [];
                         var result = await compressImage(pickedFile);
@@ -472,7 +554,7 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColors.primary,
+                      backgroundColor: const Color.fromARGB(255, 16, 136, 145),
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
