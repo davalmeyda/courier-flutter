@@ -512,7 +512,8 @@ class _DeliverDetailsState extends State<DeliverDetails> {
                   ElevatedButton(
                     onPressed: () async {
                       final picker = ImagePicker();
-                      final pickedFiles = await picker.pickMultiImage();
+                      final pickedFiles =
+                          await picker.pickMultiImage(maxWidth: 800);
                       if (pickedFiles.isNotEmpty) {
                         final List<File> compressedImages = [];
                         for (var pickedFile in pickedFiles) {
