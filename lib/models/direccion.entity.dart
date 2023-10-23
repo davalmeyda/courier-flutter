@@ -20,6 +20,7 @@ class Direccion {
   String? observaciones;
   String? googleMaps;
   String? empresaTransporte;
+  String? fecha_asig_motorizado;
   int? estado;
   String? importe;
   int? recibido;
@@ -59,6 +60,7 @@ class Direccion {
     this.estadoDirCode,
     this.direciones,
     this.reprogramaciones,
+    this.fecha_asig_motorizado,
   });
 
   factory Direccion.fromJson(Map<String, dynamic> json) => Direccion(
@@ -88,8 +90,9 @@ class Direccion {
         confirmado: json['confirmado'],
         estadoDir: json['estado_dir'],
         estadoDirCode: json['estado_dir_code'],
-        direciones: DireccionDt.fromJsonList(json['direciones']),
+        direciones: DireccionDt.fromJsonList(json['direciones']),        
         reprogramaciones: Reprogramacion.fromJsonList(json['reprogramaciones']),
+        fecha_asig_motorizado: json['fecha_asig_motorizado'],
       );
 
   static List<Direccion> fromJsonList(List<dynamic> jsonList) =>

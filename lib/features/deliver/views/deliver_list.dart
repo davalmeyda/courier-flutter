@@ -6,6 +6,7 @@ import 'package:ojo_courier/models/models.dart';
 import 'package:ojo_courier/shared/shared.dart';
 
 import 'package:ojo_courier/features/auth/bloc/auth_bloc2.dart';
+import 'package:intl/intl.dart';
 
 String defaultMessage =
     'Estimado%20cliente%2C%20%F0%9F%99%8B%F0%9F%8F%BC%E2%80%8D%E2%99%82%EF%B8%8F%F0%9F%99%8B%F0%9F%8F%BB%E2%80%8D%E2%99%80%EF%B8%8F%0ALe%20saluda%2C%20Motorizado%20Courier.%0ALe%20escribo%20para%20informarle%20que%20para%20el%20d%C3%ADa%20de%20hoy%20se%20le%20estar%C3%A1%20contactando%2C%20para%20la%20entrega%20de%20un%20documento%20que%20tengo%20a%20su%20nombre%2C%20le%20pedimos%20su%20colaboraci%C3%B3n%20en%20el%20envi%C3%B3%20de%20su%20ubicaci%C3%B3n%20actual%2C%20para%20la%20entrega%20del%20sobre.%20%C2%A1Que%20tenga%20un%20buen%20d%C3%ADa!';
@@ -268,6 +269,26 @@ class _DeliverListViewState extends State<DeliverListView> {
                                             ),
                                           ],
                                         ),
+                                        const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(
+                                        Icons.calendar_month,
+                                        color: Colors.purple,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          DateFormat('dd/MM/yyyy').format(
+                                            DateTime.parse(adresses
+                                                .fecha_asig_motorizado!),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   adresses.idUbicacion == null
                                       ? const SizedBox()
                                       : const SizedBox(height: 10),

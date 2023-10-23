@@ -6,6 +6,7 @@ import 'package:ojo_courier/models/models.dart';
 import 'package:ojo_courier/shared/shared.dart';
 
 import 'package:ojo_courier/features/auth/bloc/auth_bloc2.dart';
+import 'package:intl/intl.dart';
 
 class ReceiveListView extends StatefulWidget {
   const ReceiveListView({super.key});
@@ -176,6 +177,7 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                       ),
                                     ],
                                   ),
+                                  
                                   const SizedBox(height: 10),
                                   Row(
                                     crossAxisAlignment:
@@ -185,6 +187,23 @@ class _ReceiveListViewState extends State<ReceiveListView> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: Text(adresses.direccion ?? '-'),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.calendar_month, color: Colors.purple,),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          DateFormat('dd/MM/yyyy').format(
+                                            DateTime.parse(adresses
+                                                .fecha_asig_motorizado!),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),

@@ -44,8 +44,85 @@ class _DeliverDetailsState extends State<DeliverDetails> {
       );
       return;
     }
-    List<DireccionDt> orders =
-        widget.adress?.direciones != null ? widget.adress!.direciones! : [];
+
+    final idDireccion = widget.adress!.id;
+
+    final body = json.encode({
+      'direccionId': idDireccion,
+      'idUser': authBloc2.user!.id,
+      'importe': amount,
+      'forma_pago': paymentType,
+    });
+
+    final response = await http.put(
+      Uri.parse('${EnvironmentVariables.baseUrl}pedido/entregar/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: body,
+    );
+
+    final map = json.decode(response.body) as Map<String, dynamic>;
+
+    if (response.statusCode != 200) {
+      setState(() {
+        loading = false;
+      });
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => showSimpleDialog(
+          'Error',
+          map['message'],
+          context,
+        ),
+      );
+      return;
+    }
+
+    // List<DireccionDt> orders =
+    //     widget.adress?.direciones != null ? widget.adress!.direciones! : [];
+
+    // for (var order in orders) {
+    //   if (order.recibido == 0) {
+    //     setState(() {
+    //       loading = false;
+    //     });
+    //     if (!context.mounted) return;
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(
+    //         content: Text('No ha sido recibido'),
+    //         duration: Duration(milliseconds: 1000),
+    //       ),
+    //     );
+    //     return;
+    //   }
+    //   final response = await http.put(
+    //     Uri.parse(
+    //         '${EnvironmentVariables.baseUrl}pedido/entregar/${order.pedido?.codigo}?idUser=${authBloc2.user!.id}&importe=$amount&forma_pago=$paymentType'),
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //     },
+    //   );
+
+    //   final map = json.decode(response.body) as Map<String, dynamic>;
+
+    //   if (response.statusCode != 200) {
+    //     setState(() {
+    //       loading = false;
+    //     });
+    //     if (!context.mounted) return;
+    //     showDialog(
+    //       context: context,
+    //       builder: (context) => showSimpleDialog(
+    //         'Error',
+    //         map['message'],
+    //         context,
+    //       ),
+    //     );
+    //     return;
+    //   }
+    // }
 
     for (var element in deliverPhotos!) {
       final request = http.MultipartRequest(
@@ -72,47 +149,6 @@ class _DeliverDetailsState extends State<DeliverDetails> {
           builder: (context) => showSimpleDialog(
             'Error',
             'Error al subir la imagen',
-            context,
-          ),
-        );
-        return;
-      }
-    }
-
-    for (var order in orders) {
-      if (order.recibido == 0) {
-        setState(() {
-          loading = false;
-        });
-        if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No ha sido recibido'),
-            duration: Duration(milliseconds: 1000),
-          ),
-        );
-        return;
-      }
-      final response = await http.put(
-        Uri.parse(
-            '${EnvironmentVariables.baseUrl}pedido/entregar/${order.pedido?.codigo}?idUser=${authBloc2.user!.id}&importe=$amount&forma_pago=$paymentType'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-
-      final map = json.decode(response.body) as Map<String, dynamic>;
-
-      if (response.statusCode != 200) {
-        setState(() {
-          loading = false;
-        });
-        if (!context.mounted) return;
-        showDialog(
-          context: context,
-          builder: (context) => showSimpleDialog(
-            'Error',
-            map['message'],
             context,
           ),
         );
