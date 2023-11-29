@@ -367,8 +367,10 @@ class _DeliverListViewState extends State<DeliverListView> {
                                   adresses.celulares == null
                                       ? const SizedBox()
                                       : LaunchButtonWidget(
+                                          // url:
+                                          //     'https://wa.me/51${adresses.celulares}?text=$defaultMessage',
                                           url:
-                                              'https://wa.me/51${adresses.celulares}?text=$defaultMessage',
+                                              'https://wa.me/51${adresses.celulares}',
                                           label: 'Contactar por WhatsApp',
                                           errorLabel:
                                               'No se pudo abrir WhatsApp',
